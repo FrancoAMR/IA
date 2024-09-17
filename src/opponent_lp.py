@@ -11,7 +11,7 @@ class OpponentLp:
         self.x = window_width - self.width
         self.y = 0     
         self.lp = 20   
-        self.deck = 40
+        self.deck = 35
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))

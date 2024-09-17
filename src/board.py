@@ -9,7 +9,7 @@ class Board:
         self.rect_height = field_height // 2
         self.rectangles = []
         self.occupied = [False] * 10
-        self.occupied_cards = []  # Lista para almacenar las cartas en el tablero
+        self.occupied_cards = []  
         
         for row in range(2):
             for col in range(5):
@@ -19,7 +19,7 @@ class Board:
 
     def draw(self, screen):
         screen.blit(field_image, (field_x, field_y))
-        # Dibujar las cartas en el tablero
+
         for card in self.occupied_cards:
             card.draw(screen, Board.card_on_board)
 

@@ -11,7 +11,7 @@ class Lp:
         self.x = lp_x
         self.y = lp_y
         self.lp = 20
-        self.deck = 40
+        self.deck = 35
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))

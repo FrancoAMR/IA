@@ -23,15 +23,15 @@ class Card:
     def draw(self, screen, num_cards):
         if self.is_on_board:
             screen.blit(card_image, (self.x, self.y))
-            self.draw_stats(screen, self.x, self.y)  # Pasar x e y aquí
+            self.draw_stats(screen, self.x, self.y)  
         else:
             aux_num_cards = num_cards - Board.card_on_board
             self.x = card_init_x - (card_width * aux_num_cards) / 2 + card_width * self.index
             self.y = card_y - 20 if self.is_selected else card_y
             screen.blit(card_image, (self.x, self.y))
-            self.draw_stats(screen, self.x, self.y)  # Pasar x e y aquí
+            self.draw_stats(screen, self.x, self.y)  
 
-    def draw_stats(self, screen, x, y):  # Aceptar x e y como argumentos
+    def draw_stats(self, screen, x, y): 
         font = pygame.font.SysFont(None, 24)
         
         attack_text = font.render(str(self.attack_value), True, (101, 101, 102))
