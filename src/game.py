@@ -3,7 +3,11 @@ from values import *
 from board import Board
 from card import Card
 from opponent_card import OpponentCard
-from input import *
+from endbutton import Endbutton
+from lp import Lp
+from opponent_lp import OpponentLp
+from input import handle_input
+import random
 
 class Game:
     def __init__(self):
@@ -12,8 +16,10 @@ class Game:
         self.screen = pygame.display.set_mode((window_width, window_height))
         self.clock = pygame.time.Clock()
 
-
         self.board = Board()
+        self.endbutton = Endbutton()
+        self.lp = Lp()
+        self.opponent_lp = OpponentLp()
         self.cards = [Card(i) for i in range(5)]
         self.opponent_cards = [OpponentCard(i) for i in range(5)]
         self.num_cards = 5
@@ -28,13 +34,33 @@ class Game:
             self.render()
 
     def events(self, events):
-        self.num_cards = handle_input(self.cards, self.num_cards, self.board, events) 
-        
+        mouse_pos = pygame.mouse.get_pos()
+        self.num_cards = handle_input(self.cards, self.num_cards, self.board, events)
 
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1: 
+                    if self.endbutton.is_clicked(mouse_pos):
+                        self.cpu_turn()
+
+    def cpu_turn(self):
+        available_cards = [card for card in self.cards if not card.is_on_board]
+        if available_cards:
+            card_to_place = random.choice(available_cards)
+            empty_rects = [rect for i, rect in enumerate(self.board.rectangles) if not self.board.occupied[i]]
+            if empty_rects:
+                rect = random.choice(empty_rects)
+                card_to_place.move_to_board(rect)
+                self.board.occupied[self.board.rectangles.index(rect)] = True
+                Board.card_on_board += 1
+                print("Cartas en tablero:", Board.card_on_board)
+                
     def render(self):
         self.screen.fill(background_color)
         self.board.draw(self.screen)
-
+        self.endbutton.draw(self.screen)
+        self.lp.draw(self.screen)
+        self.opponent_lp.draw(self.screen)
 
         mouse_pos = pygame.mouse.get_pos()
         self.board.mouse(self.screen, mouse_pos)

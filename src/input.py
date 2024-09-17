@@ -17,7 +17,6 @@ def handle_input(cards, num_cards, board, events):
                         
                         if Card.selected_card in cards:
                             cards.remove(Card.selected_card)
-                            num_cards -= 1
                         Card.selected_card = None
                         print(num_cards)
                 else:
