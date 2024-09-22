@@ -20,8 +20,10 @@ class Game:
         self.endbutton = Endbutton()
         self.lp = Lp()
         self.opponent_lp = OpponentLp()
+
         self.cards = [Card(i) for i in range(5)]
         self.opponent_cards = [OpponentCard(i) for i in range(5)]
+        
         self.num_cards = 5
         print(self.num_cards)
         self.num_opponent_cards = 5
@@ -44,16 +46,17 @@ class Game:
                         self.cpu_turn()
 
     def cpu_turn(self):
-        available_cards = [card for card in self.cards if not card.is_on_board]
+        available_cards = [card for card in self.opponent_cards if not card.is_on_board]
         if available_cards:
             card_to_place = random.choice(available_cards)
-            empty_rects = [rect for i, rect in enumerate(self.board.rectangles) if not self.board.occupied[i]]
+            empty_rects = [rect for i, rect in enumerate(self.board.rectangles) if not self.board.occupied[i] and self.board.is_first_row(i)]
             if empty_rects:
                 rect = random.choice(empty_rects)
                 card_to_place.move_to_board(rect)
                 self.board.occupied[self.board.rectangles.index(rect)] = True
                 Board.card_on_board += 1
                 print("Cartas en tablero:", Board.card_on_board)
+
                 
     def render(self):
         self.screen.fill(background_color)

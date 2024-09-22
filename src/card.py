@@ -25,8 +25,7 @@ class Card:
             screen.blit(card_image, (self.x, self.y))
             self.draw_stats(screen, self.x, self.y)  
         else:
-            aux_num_cards = num_cards - Board.card_on_board
-            self.x = card_init_x - (card_width * aux_num_cards) / 2 + card_width * self.index
+            self.x = card_init_x - (card_width * num_cards) / 2 + card_width * self.index
             self.y = card_y - 20 if self.is_selected else card_y
             screen.blit(card_image, (self.x, self.y))
             self.draw_stats(screen, self.x, self.y)  

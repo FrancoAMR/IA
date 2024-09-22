@@ -8,6 +8,8 @@ window_height = 720
 gray = (234, 234, 234)
 highlight_color = (239, 160, 160, 165)
 background_color = (96, 155, 99, 165)
+stat_color = (101, 101, 102)
+phase1_color = (255, 233, 163)
 
 # Field
 field_image = pygame.image.load("assets/images/field.png")
@@ -35,6 +37,7 @@ card_desc_y = field_y
 
 # End Turn Button
 end_button_image = pygame.image.load("assets/images/endphase.png")
+mask = pygame.mask.from_surface(end_button_image)
 end_button_width = 100
 end_button_height = 100
 end_button_image = pygame.transform.scale(end_button_image,(end_button_width,end_button_height))

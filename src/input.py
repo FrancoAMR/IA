@@ -12,9 +12,7 @@ def handle_input(cards, num_cards, board, events):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: 
                 if Card.selected_card:
-                    
-                    if board.place_card(mouse_pos, Card.selected_card):
-                        
+                    if board.place_card(mouse_pos, Card.selected_card, is_opponent=False):  
                         if Card.selected_card in cards:
                             cards.remove(Card.selected_card)
                         Card.selected_card = None
