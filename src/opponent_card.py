@@ -3,7 +3,7 @@ import random
 from values import *
 
 class OpponentCard:
-    def __init__(self, index):
+    def __init__(self, index, attack_value=0, defense_value=0):
         self.image = pygame.transform.flip(card_image, False, True) 
         self.width = card_width
         self.height = card_height
@@ -13,8 +13,8 @@ class OpponentCard:
         self.x = 0
         self.y = 0  
 
-        self.attack_value = random.randint(1, 8)
-        self.defense_value = random.randint(1, 8)
+        self.attack_value = attack_value
+        self.defense_value = defense_value
         
         self.is_on_board = False  # Añadir esto para manejar las cartas que están en el tablero
 

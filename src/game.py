@@ -31,7 +31,7 @@ class Game:
         self.opponent_lp = OpponentLp()
 
         self.cards = self.createCards()
-        self.opponent_cards = [OpponentCard(i) for i in range(5)]
+        self.opponent_cards = self.createCards()
         
         self.num_cards = 5
         print(self.num_cards)
