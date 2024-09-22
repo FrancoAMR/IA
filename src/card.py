@@ -19,6 +19,14 @@ class Card:
 
         self.attack_value = random.randint(1, 8)
         self.defense_value = random.randint(1, 8)
+        #cambios para saber la piosicion de la carta         
+        self.board_position = None  # Nueva variable para la posición en el tablero
+        self.is_selected = False
+        self.is_on_board = False  
+        self.is_opponent = is_opponent
+        self.description = CardDescription()
+        self.attack_value = random.randint(1, 8)
+        self.defense_value = random.randint(1, 8)
 
     def draw(self, screen, num_cards):
         if self.is_on_board:
@@ -56,14 +64,12 @@ class Card:
             else:
                 self.deselect()
 
-    def move_to_board(self, rect):
+    def move_to_board(self, rect, board_position):
         self.x = rect.x
         self.y = rect.y
         self.is_on_board = True
         self.deselect()
-
-        self.board_x = self.x
-        self.board_y = self.y
+        self.board_position = board_position  # Guardamos el índice de la posición en el tablero
 
     def deselect(self):
         self.is_selected = False

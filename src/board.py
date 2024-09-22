@@ -37,18 +37,36 @@ class Board:
     def place_card(self, mouse_pos, selected_card, is_opponent=False):
         for i, rect in enumerate(self.rectangles):
             if rect.collidepoint(mouse_pos) and not self.occupied[i]:
+                # Si la carta ya está en el tablero, liberamos su posición anterior
+                if selected_card.board_position is not None:
+                    self.remove_card(selected_card)
+
+                # Ahora colocamos la carta en la nueva posición
                 if is_opponent and self.is_first_row(i): 
-                    selected_card.move_to_board(rect)
+                    selected_card.move_to_board(rect, i)  # Ahora pasamos el índice del tablero
                     self.occupied[i] = True
                     self.occupied_cards.append(selected_card)
                     Board.card_on_board += 1
                     print("Cartas en tablero:", Board.card_on_board)
                     return True
                 elif not is_opponent and self.is_second_row(i):
-                    selected_card.move_to_board(rect)
+                    selected_card.move_to_board(rect, i)  # Ahora pasamos el índice del tablero
                     self.occupied[i] = True
                     self.occupied_cards.append(selected_card)
                     Board.card_on_board += 1
                     print("Cartas en tablero:", Board.card_on_board)
                     return True
+        return False
+
+    #funcion para que se pueda actualizar la liberaación de la casilla de carta una vez movida 
+    def remove_card(self,card):
+        if card.board_position is not None:
+            # Liberar la posición ocupada por la carta
+            self.occupied[card.board_position] = False
+            self.occupied_cards.remove(card)  # Remover la carta de las ocupadas
+            Board.card_on_board -= 1
+            print("Carta removida. Cartas en tablero:", Board.card_on_board)
+            # Resetea la posición de la carta
+            card.board_position = None
+            return True
         return False
