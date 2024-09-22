@@ -13,7 +13,7 @@ class Game:
     def createCards(self):
         attack_values=[0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5]
         defense_values=[3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5]
-        cards= [30]
+        cards= []
         for i in range(30):
             card= Card(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
             cards.append(card)
