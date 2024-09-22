@@ -7,7 +7,7 @@ from description import CardDescription
 class Card:
     selected_card = None
 
-    def __init__(self, index, is_opponent=False):
+    def __init__(self, index, attack_value=0, defense_value=0, is_opponent=False):
         self.index = index
         self.x = 0
         self.y = card_y
@@ -17,16 +17,7 @@ class Card:
         self.is_opponent = is_opponent
         self.description = CardDescription()
 
-        self.attack_value = random.randint(1, 8)
-        self.defense_value = random.randint(1, 8)
-        #cambios para saber la piosicion de la carta         
-        self.board_position = None  # Nueva variable para la posición en el tablero
-        self.is_selected = False
-        self.is_on_board = False  
-        self.is_opponent = is_opponent
-        self.description = CardDescription()
-        self.attack_value = random.randint(1, 8)
-        self.defense_value = random.randint(1, 8)
+
 
     def draw(self, screen, num_cards):
         if self.is_on_board:
@@ -76,3 +67,5 @@ class Card:
         self.description.hide()
         if Card.selected_card == self:
             Card.selected_card = None
+
+    
