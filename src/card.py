@@ -17,6 +17,14 @@ class Card:
         self.is_opponent = is_opponent
         self.description = CardDescription()
 
+        self.attack_value = attack_value
+        self.defense_value = defense_value
+        #cambios para saber la piosicion de la carta         
+        self.board_position = None  # Nueva variable para la posición en el tablero
+        self.is_selected = False
+        self.is_on_board = False  
+        self.is_opponent = is_opponent
+        self.description = CardDescription()
 
 
     def draw(self, screen, num_cards):
@@ -67,5 +75,3 @@ class Card:
         self.description.hide()
         if Card.selected_card == self:
             Card.selected_card = None
-
-    

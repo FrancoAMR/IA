@@ -10,15 +10,19 @@ from input import handle_input
 import random
 
 class Game:
-    def createCards(self):
+
+    def createCards(self, typeCard):
         attack_values=[0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5]
         defense_values=[3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5]
         cards= []
         for i in range(30):
-            card= Card(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
+            if(typeCard=="card"):
+                card= Card(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
+            else:
+                card= OpponentCard(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
             cards.append(card)
         return cards
-    
+
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Window")
@@ -30,14 +34,13 @@ class Game:
         self.lp = Lp()
         self.opponent_lp = OpponentLp()
 
-        self.cards = self.createCards()
-        self.opponent_cards = self.createCards()
+        self.cards = self.createCards("card")
+        self.opponent_cards = self.createCards("opcard")
         
         self.num_cards = 5
         print(self.num_cards)
         self.num_opponent_cards = 5
         self.running = True
-
 
     def run(self):
         while self.running:
