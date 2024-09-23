@@ -6,15 +6,15 @@ from description import CardDescription
 class Card:
     selected_card = None
 
-    def __init__(self, index, attack_value=0, defense_value=0, is_opponent=False):
+    def __init__(self, index, attack_value=0, defense_value=0, state=0):
         self.index = index
         self.x = 0
         self.y = card_y
 
         self.is_selected = False
         self.is_on_board = False  
-        self.is_opponent = is_opponent
         self.description = CardDescription()
+        self.state = state
 
         self.attack_value = attack_value
         self.defense_value = defense_value
@@ -22,18 +22,20 @@ class Card:
         self.board_position = None  # Nueva variable para la posición en el tablero
         self.is_selected = False
         self.is_on_board = False  
-        self.is_opponent = is_opponent
         self.description = CardDescription()
 
     def draw(self, screen, num_cards):
+        print("Dibujó")
         if self.is_on_board:
             screen.blit(card_image, (self.x, self.y))
-            self.draw_stats(screen, self.x, self.y)  
+            self.draw_stats(screen, self.x, self.y)
+            print("Board")  
         else:
             self.x = card_init_x - (card_width * num_cards) / 2 + card_width * self.index
             self.y = card_y - 20 if self.is_selected else card_y
             screen.blit(card_image, (self.x, self.y))
             self.draw_stats(screen, self.x, self.y)  
+            print("Manita")
 
     def draw_stats(self, screen, x, y): 
         font = pygame.font.SysFont(None, 24)
