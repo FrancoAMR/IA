@@ -11,6 +11,18 @@ import random
 
 class Game:
 
+    def createCards(self, typeCard):
+        attack_values=[0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5]
+        defense_values=[3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5]
+        cards= []
+        for i in range(30):
+            if(typeCard=="card"):
+                card= Card(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
+            else:
+                card= OpponentCard(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
+            cards.append(card)
+        return cards
+
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Window")
@@ -24,27 +36,11 @@ class Game:
 
         self.cards = self.createCards("card")
         self.opponent_cards = self.createCards("opcard")
-
-        #0= Robo de cartas, 1= Invocacion, 2= Colocacion, 3= Ataque, 4= Calculo de daño, 5= Fin de turno
-        self.turnState= 0
-
         
         self.num_cards = 5
         print(self.num_cards)
         self.num_opponent_cards = 5
         self.running = True
-
-    def createCards(self, typeCard):
-        attack_values=[0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5,0,4,1,3,2,1,2,6,2,5]
-        defense_values=[3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5]
-        cards= []
-        for i in range(30):
-            if(typeCard=="card"):
-                card= Card(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
-            else:
-                card= OpponentCard(index=i, attack_value=attack_values[i], defense_value=defense_values[i])
-            cards.append(card)
-        return cards
 
     def run(self):
         while self.running:
