@@ -23,16 +23,23 @@ class Card:
         self.is_on_board = False  
         self.state = state
         self.description = CardDescription()
+        self.positions_x = []
 
     def draw(self, screen, num_cards):
         if self.is_on_board:
             screen.blit(card_image, (self.x, self.y))
             self.draw_stats(screen, self.x, self.y)  
         else:
-            self.x = card_init_x - (card_width * num_cards) / 2 + card_width*1.5 * num_cards - card_init_x/3
+            self.x = card_init_x - (card_width * num_cards) / 2 + card_width * 1.5 * num_cards - card_init_x / 3
             self.y = card_y - 20 if self.is_selected else card_y
+            if num_cards >= len(self.positions_x):
+                self.positions_x.append(self.x)  # Agrega la nueva posición
+            else:
+                self.positions_x[num_cards] = self.x  # Actualiza la posición existente
             screen.blit(card_image, (self.x, self.y))
-            self.draw_stats(screen, self.x, self.y)  
+            self.draw_stats(screen, self.x, self.y)
+
+        
 
     def draw_stats(self, screen, x, y): 
         font = pygame.font.SysFont(None, 24)
@@ -48,17 +55,21 @@ class Card:
         defense_text_y = attack_text_y
         screen.blit(defense_text, (defense_text_x, defense_text_y))
 
-    def click(self, mouse_pos):
-        card_rect = pygame.Rect(self.x, self.y, card_width, card_height)
-        if card_rect.collidepoint(mouse_pos):
-            if not self.is_selected:
-                if Card.selected_card:
-                    Card.selected_card.deselect()
-                self.is_selected = True
-                self.description.show()
-                Card.selected_card = self
-            else:
-                self.deselect()
+    def click(self, mouse_pos, i):
+    # Verifica que el índice i sea válido
+        print("carta_x: ", self.positions_x[i])
+        if i < len(self.positions_x):
+            card_rect = pygame.Rect(self.positions_x[i], self.y, card_width, card_height)
+            if card_rect.collidepoint(mouse_pos):
+                if not self.is_selected:
+                    if Card.selected_card:
+                        Card.selected_card.deselect()
+                    self.is_selected = True
+                    self.description.show()
+                    Card.selected_card = self
+                else:
+                    self.deselect()
+
 
     def move_to_board(self, rect, board_position):
         self.x = rect.x

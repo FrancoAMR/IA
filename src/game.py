@@ -74,7 +74,7 @@ class Game:
     
     def events(self, events):
         mouse_pos = pygame.mouse.get_pos()
-        #self.num_cards = handle_input(self.cards, self.num_cards, self.board, events)
+        #handle_input(self.cards, self.num_cards, self.board, events)
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -83,14 +83,30 @@ class Game:
                 if event.button == 1: 
                     if self.endbutton.is_clicked(mouse_pos) and (self.turnState==3 or self.turnState==5):
                         self.change_state()
+
+
+
+                    if Card.selected_card:
+                        if self.board.place_card(mouse_pos, Card.selected_card, is_opponent=False):  
+                            if Card.selected_card in self.cards:
+                                self.cards.remove(Card.selected_card)
+                            Card.selected_card = None
+                            print(self.num_cards)
+                    else:
+                        for i in range(self.num_cards):
+                            handData = json.dumps(self.hand[i])
+                            newData = json.loads(handData)
+                            card = Card(index=newData["index"], attack_value=newData["attack_value"], defense_value=newData["defense_value"], state=0)
+
+                            print("Seleccionó")
+                            card.click(mouse_pos, i)
+                    
     
     def change_state(self):
         match self.turnState:
             case 0:
                 print("Pickup0")
-                self.pickup()
-                print("Pickup1")
-                self.opPickup()
+                self.pickup()                
                 self.turnState = 1
             case 1:
                 print("El juego entra en el segundo estado")
@@ -106,6 +122,8 @@ class Game:
                 self.turnState = 3
             #-----
             case 5:
+                print("Pickup1")
+                self.opPickup()
                 self.turnState = 6
             case 6:
                 self.turnState = 7
@@ -147,7 +165,7 @@ class Game:
         if self.turnState!=0:
             return 0
         else:
-            print("Pickup5")
+            print("Dibujó")
             while(len(self.opHand) < 5):
                 print("Pickup6")
                 i = random.randint(0, 29)
@@ -165,7 +183,7 @@ class Game:
                     "defense_value": self.defense_values[i],
                     "state": 0
                 }
-            self.opnum_cards = len(self.opHand)  # Actualizamos el número de cartas en la mano
+            self.num_opponent_cards = len(self.opHand)  # Actualizamos el número de cartas en la mano
 
     def atk_decision(self):
         return True
@@ -187,12 +205,12 @@ class Game:
             newData = json.loads(handData)
             newDraw = Card(index=newData["index"], attack_value=newData["attack_value"], defense_value=newData["defense_value"], state=0)
             newDraw.draw(self.screen, i)
-
+        #self.cards = [Card(i) for i in range(5)]
         for j in range(self.num_opponent_cards):
-            opHandData = json.dumps(self.opHand[i])
+            opHandData = json.dumps(self.opHand[j])
             newOpData = json.loads(opHandData)
             newOpDraw = OpponentCard(index=newOpData["index"], attack_value=newOpData["attack_value"], defense_value=newOpData["defense_value"], state=0)
-            newOpDraw.draw(self.screen, i)
+            newOpDraw.draw(self.screen, j)
 
         pygame.display.update()
         self.clock.tick(60)

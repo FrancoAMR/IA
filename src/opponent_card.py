@@ -19,9 +19,8 @@ class OpponentCard:
         self.is_on_board = False  # Añadir esto para manejar las cartas que están en el tablero
 
     def draw(self, screen, num_cards):
-        card_x = card_init_x - (self.width * num_cards) / 2 + card_width * self.index
-        self.x = card_x
-        screen.blit(self.image, (card_x, self.y))
+        self.x = card_init_x - (card_width * num_cards) / 2 + card_width*1.5 * num_cards - card_init_x/3
+        screen.blit(self.image, (self.x, self.y))
         self.draw_stats(screen)
 
     def draw_stats(self, screen):
