@@ -8,8 +8,6 @@ class Card:
 
     def __init__(self, index, attack_value=0, defense_value=0, state=0):
         self.index = index
-        self.x = [427,527,627,726,826]
-        self.y = card_y
 
         self.is_selected = False
         self.is_on_board = False  
@@ -27,16 +25,16 @@ class Card:
 
     def draw(self, screen, num_cards):
         if self.is_on_board:
-            screen.blit(card_image, (self.x, self.y))
-            self.draw_stats(screen, self.x, self.y)  
+            screen.blit(card_image, (positionX[num_cards], positionY[1]))
+            self.draw_stats(screen, positionX[num_cards], positionY[1])  
         else:
-            self.y = card_y - 20 if self.is_selected else card_y
+            positionY[0] = positionY-20 if self.is_selected else positionY[0]
             if num_cards >= len(self.positions_x):
                 self.positions_x.append(self.x[num_cards])  # Agrega la nueva posición
             else:
-                self.positions_x[num_cards] = self.x[num_cards]  # Actualiza la posición existente
-            screen.blit(card_image, (self.x[num_cards], self.y))
-            self.draw_stats(screen, self.x[num_cards], self.y)
+                self.positions_x[num_cards] = positionX[num_cards]  # Actualiza la posición existente
+            screen.blit(card_image, (positionX[num_cards], positionY[0]))
+            self.draw_stats(screen, positionX[num_cards], positionY[0])
 
     def draw_stats(self, screen, x, y): 
         font = pygame.font.SysFont(None, 24)
@@ -55,7 +53,8 @@ class Card:
     def click(self, mouse_pos, i):
     # Verifica que el índice i sea válido
         if i < len(self.x):
-            card_rect = pygame.Rect(self.x[i], self.y, card_width, card_height)
+            card_rect = pygame.Rect(positionX[i], positionY[0], card_width, card_height)
+            print("Carta numero: ", i)
             print("supera al if")
             if card_rect.collidepoint(mouse_pos):
                 print("supera al 2do if")
@@ -70,15 +69,17 @@ class Card:
                     print("supera la muestra de descripcion")
                     Card.selected_card = self
                 else:
+                    print("Antes del deselect")
                     self.deselect()
 
 
     def move_to_board(self, rect, board_position):
-        self.x = rect.x
-        self.y = rect.y
-        self.is_on_board = True
-        self.deselect()
-        self.board_position = board_position  # Guardamos el índice de la posición en el tablero
+        print("TODO")
+        #positionX[0] = rect.x
+        #self.y = rect.y
+        #self.is_on_board = True
+        #self.deselect()
+        #self.board_position = board_position  # Guardamos el índice de la posición en el tablero
 
     def deselect(self):
         self.is_selected = False

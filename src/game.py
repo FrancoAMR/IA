@@ -97,8 +97,6 @@ class Game:
                             handData = json.dumps(self.hand[i])
                             newData = json.loads(handData)
                             card = Card(index=newData["index"], attack_value=newData["attack_value"], defense_value=newData["defense_value"], state=0)
-
-                            print("Seleccionó")
                             card.click(mouse_pos, i)
                     
     
@@ -106,7 +104,8 @@ class Game:
         match self.turnState:
             case 0:
                 print("Pickup0")
-                self.pickup()                
+                self.pickup()
+                self.opPickup()         
                 self.turnState = 1
             case 1:
                 print("El juego entra en el segundo estado")
