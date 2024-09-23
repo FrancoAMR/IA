@@ -24,16 +24,21 @@ class Game:
         self.defense_values=[3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5,3,2,4,3,4,1,3,1,4,5]
         self.cards={}
         self.fillCards("card")
-        cardData= json.dumps(self.cards[1])
-        print(cardData)
-        data= json.loads(cardData)
-        print(data['attack_value'])
+        #cardData= json.dumps(self.cards[1])
+        #print(cardData)
+        #data= json.loads(cardData)
+        #print(data['attack_value'])
+        
+        self.oponent_cards={}
+        self.fillCards("opCard")
+        
         #0= Robo de cartas, 1= Invocacion, 2= Colocacion, 3= Ataque, 4= Calculo de daño, 5= Fin de turno
         #6= ""            , 7= ""        , 8= ""        , 9= ""    , 10= ""            , 11= ""
         self.turnState= 0
         self.hand = {}
         self.num_cards = len(self.hand)
-        self.num_opponent_cards = 5
+        self.opHand= {}
+        self.num_opponent_cards = len(self.opHand)
         self.running = True
         
     
@@ -47,7 +52,13 @@ class Game:
                     "state": 0
                 }
         elif (typeCard=="opCard"):
-            print("TODO")
+            for i in range(30):
+                self.oponent_cards[i] = {
+                    "index": i,
+                    "attack_value": self.attack_values[i],
+                    "defense_value": self.defense_values[i],
+                    "state": 0
+                }
 
     def run(self):
         while self.running:
@@ -79,6 +90,7 @@ class Game:
                 print("Pickup0")
                 self.pickup()
                 print("Pickup1")
+                self.opPickup()
                 self.turnState = 1
             case 1:
                 print("El juego entra en el segundo estado")
@@ -131,6 +143,29 @@ class Game:
                 }
             self.num_cards = len(self.hand)  # Actualizamos el número de cartas en la mano
 
+    def opPickup(self):
+        if self.turnState!=0:
+            return 0
+        else:
+            print("Pickup5")
+            while(len(self.opHand) < 5):
+                print("Pickup6")
+                i = random.randint(0, 29)
+                cardData = int(json.dumps(self.oponent_cards[i]["state"]))
+                print(cardData)
+                while(cardData == 1):
+                    print("Pickup7")
+                    i = random.randint(0, 29)
+                    cardData = int(json.dumps(self.oponent_cards[i]["state"]))
+                j = len(self.opHand)
+                print(j)
+                self.opHand[j] = {
+                    "index": i,
+                    "attack_value": self.attack_values[i],
+                    "defense_value": self.defense_values[i],
+                    "state": 0
+                }
+            self.opnum_cards = len(self.opHand)  # Actualizamos el número de cartas en la mano
 
     def atk_decision(self):
         return True
@@ -152,6 +187,12 @@ class Game:
             newData = json.loads(handData)
             newDraw = Card(index=newData["index"], attack_value=newData["attack_value"], defense_value=newData["defense_value"], state=0)
             newDraw.draw(self.screen, i)
+
+        for j in range(self.num_opponent_cards):
+            opHandData = json.dumps(self.opHand[i])
+            newOpData = json.loads(opHandData)
+            newOpDraw = OpponentCard(index=newOpData["index"], attack_value=newOpData["attack_value"], defense_value=newOpData["defense_value"], state=0)
+            newOpDraw.draw(self.screen, i)
 
         pygame.display.update()
         self.clock.tick(60)

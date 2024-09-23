@@ -1,9 +1,9 @@
 import pygame
-import random
+from board import Board
 from values import *
 
 class OpponentCard:
-    def __init__(self, index, attack_value=0, defense_value=0):
+    def __init__(self, index, attack_value=0, defense_value=0, state=0):
         self.image = pygame.transform.flip(card_image, False, True) 
         self.width = card_width
         self.height = card_height
