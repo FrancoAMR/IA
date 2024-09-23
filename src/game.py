@@ -205,6 +205,7 @@ class Game:
             newData = json.loads(handData)
             newDraw = Card(index=newData["index"], attack_value=newData["attack_value"], defense_value=newData["defense_value"], state=0)
             newDraw.draw(self.screen, i)
+        
         #self.cards = [Card(i) for i in range(5)]
         for j in range(self.num_opponent_cards):
             opHandData = json.dumps(self.opHand[j])

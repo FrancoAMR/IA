@@ -8,7 +8,7 @@ class Card:
 
     def __init__(self, index, attack_value=0, defense_value=0, state=0):
         self.index = index
-        self.x = 0
+        self.x = [427,527,627,726,826]
         self.y = card_y
 
         self.is_selected = False
@@ -30,16 +30,13 @@ class Card:
             screen.blit(card_image, (self.x, self.y))
             self.draw_stats(screen, self.x, self.y)  
         else:
-            self.x = card_init_x - (card_width * num_cards) / 2 + card_width * 1.5 * num_cards - card_init_x / 3
             self.y = card_y - 20 if self.is_selected else card_y
             if num_cards >= len(self.positions_x):
-                self.positions_x.append(self.x)  # Agrega la nueva posición
+                self.positions_x.append(self.x[num_cards])  # Agrega la nueva posición
             else:
-                self.positions_x[num_cards] = self.x  # Actualiza la posición existente
-            screen.blit(card_image, (self.x, self.y))
-            self.draw_stats(screen, self.x, self.y)
-
-        
+                self.positions_x[num_cards] = self.x[num_cards]  # Actualiza la posición existente
+            screen.blit(card_image, (self.x[num_cards], self.y))
+            self.draw_stats(screen, self.x[num_cards], self.y)
 
     def draw_stats(self, screen, x, y): 
         font = pygame.font.SysFont(None, 24)
@@ -57,15 +54,20 @@ class Card:
 
     def click(self, mouse_pos, i):
     # Verifica que el índice i sea válido
-        print("carta_x: ", self.positions_x[i])
-        if i < len(self.positions_x):
-            card_rect = pygame.Rect(self.positions_x[i], self.y, card_width, card_height)
+        if i < len(self.x):
+            card_rect = pygame.Rect(self.x[i], self.y, card_width, card_height)
+            print("supera al if")
             if card_rect.collidepoint(mouse_pos):
+                print("supera al 2do if")
                 if not self.is_selected:
+                    print("supera al 3er if")
                     if Card.selected_card:
+                        print("supera al 4to if")
                         Card.selected_card.deselect()
+                    print("supera la cadena de ifs")
                     self.is_selected = True
                     self.description.show()
+                    print("supera la muestra de descripcion")
                     Card.selected_card = self
                 else:
                     self.deselect()
