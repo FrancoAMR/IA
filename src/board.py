@@ -10,12 +10,16 @@ class Board:
         self.rectangles = []
         self.occupied = [False] * 10
         self.occupied_cards = []  
+        self.board_rect = [None] * 10
         
-        for row in range(2):
-            for col in range(5):
-                rect_x = field_x + col * self.rect_width
-                rect_y = field_y + row * self.rect_height
-                self.rectangles.append(pygame.Rect(rect_x, rect_y, self.rect_width, self.rect_height))
+        # Crear los rectángulos del tablero
+        for index in range(10):
+            col = index % 5  # Columna (0 a 4)
+            row = index // 5  # Fila (0 o 1)
+            rect_x = positionX[col]
+            rect_y = positionY[row + 1]  # Usar el segundo y tercer valor de positionY
+            self.rectangles.append(pygame.Rect(rect_x, rect_y, card_width, card_height))
+            self.board_rect[index] = pygame.Rect(rect_x, rect_y, card_width, card_height)
 
     def is_first_row(self, rect_index):
         return rect_index < 5  
@@ -58,8 +62,8 @@ class Board:
                     return True
         return False
 
-    #funcion para que se pueda actualizar la liberaación de la casilla de carta una vez movida 
-    def remove_card(self,card):
+    # Función para que se pueda actualizar la liberación de la casilla de carta una vez movida 
+    def remove_card(self, card):
         if card.board_position is not None:
             # Liberar la posición ocupada por la carta
             self.occupied[card.board_position] = False

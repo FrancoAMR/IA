@@ -194,8 +194,13 @@ class Game:
         # Limpiar la pantalla
         self.screen.fill(background_color)
 
+        # Obtener la posición del mouse
+        mouse_pos = pygame.mouse.get_pos()
+
         # Dibujar el tablero y el botón de fin de turno
         self.board.draw(self.screen)
+        self.board.mouse(self.screen, mouse_pos)  # Llamar a la función mouse para verificar el mouse
+
         self.endbutton.draw(self.screen, self.turnState)
 
         # Dibujar las cartas en la mano
@@ -204,8 +209,7 @@ class Game:
             newData = json.loads(handData)
             newDraw = Card(index=newData["index"], attack_value=newData["attack_value"], defense_value=newData["defense_value"], state=0)
             newDraw.draw(self.screen, i)
-        
-        #self.cards = [Card(i) for i in range(5)]
+
         for j in range(self.num_opponent_cards):
             opHandData = json.dumps(self.opHand[j])
             newOpData = json.loads(opHandData)
@@ -214,3 +218,4 @@ class Game:
 
         pygame.display.update()
         self.clock.tick(60)
+
