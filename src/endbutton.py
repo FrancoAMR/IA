@@ -11,7 +11,7 @@ class Endbutton:
         self.x = end_button_x
         self.y = end_button_y
 
-    def draw(self, screen):
+    def draw(self, screen, state):
         screen.blit(self.image, (self.x, self.y))
 
     def is_clicked(self, mouse_pos):

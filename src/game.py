@@ -52,15 +52,22 @@ class Game:
     def run(self):
         while self.running:
             events = pygame.event.get()
-            self.events(events)
-            self.render()
-            if(self.turnState==0):
+            self.events(events)  # Manejo de eventos (clics, movimientos)
+            self.render()  # Dibujar los elementos en pantalla
+
+            # Manejar el cambio de estado si es necesario
+            if self.turnState in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
                 self.change_state()
+
+
     
     def events(self, events):
         mouse_pos = pygame.mouse.get_pos()
-        self.num_cards = handle_input(self.cards, self.num_cards, self.board, events)
+        #self.num_cards = handle_input(self.cards, self.num_cards, self.board, events)
         for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: 
                     if self.endbutton.is_clicked(mouse_pos) and (self.turnState==3 or self.turnState==5):
@@ -69,9 +76,12 @@ class Game:
     def change_state(self):
         match self.turnState:
             case 0:
+                print("Pickup0")
                 self.pickup()
+                print("Pickup1")
                 self.turnState = 1
             case 1:
+                print("El juego entra en el segundo estado")
                 self.turnState = 2
             case 2:
                 self.turnState = 3
@@ -96,52 +106,52 @@ class Game:
                     self.turnState = 0
     
     def pickup(self):
+        print("Pickup3")
         if self.turnState != 0:
+            print("Pickup4")
             return 0
         else:
-            while(len(self.hand)<5):
-                i= random.randint(0,29)
-                cardData= json.dumps(self.cards[i]["state"])
-                while(cardData==1):
-                    i= random.randint(0,29)
-                    cardData= json.dumps(self.cards[i]["state"])
-                j= len(self.hand)
-                self.hand[j+1]={
+            print("Pickup5")
+            while(len(self.hand) < 5):
+                print("Pickup6")
+                i = random.randint(0, 29)
+                cardData = int(json.dumps(self.cards[i]["state"]))
+                print(cardData)
+                while(cardData == 1):
+                    print("Pickup7")
+                    i = random.randint(0, 29)
+                    cardData = int(json.dumps(self.cards[i]["state"]))
+                j = len(self.hand)
+                print(j)
+                self.hand[j] = {
                     "index": i,
                     "attack_value": self.attack_values[i],
                     "defense_value": self.defense_values[i],
                     "state": 0
                 }
-            for j in range(self.num_cards):
-                handData= json.dumps(self.hand[j])
-                handData.draw(self.screen, self.num_cards)
+            self.num_cards = len(self.hand)  # Actualizamos el número de cartas en la mano
 
-    def atk_decision():
+
+    def atk_decision(self):
         return True
 
     #turn cpu
 
                 
     def render(self):
+        # Limpiar la pantalla
         self.screen.fill(background_color)
+
+        # Dibujar el tablero y el botón de fin de turno
         self.board.draw(self.screen)
         self.endbutton.draw(self.screen, self.turnState)
 
-
-        mouse_pos = pygame.mouse.get_pos()
-        self.board.mouse(self.screen, mouse_pos)
-
+        # Dibujar las cartas en la mano
         for i in range(self.num_cards):
-            handData= json.dumps(self.hand[i])
-            newData= json.loads(handData)
-            newDraw= Card(index= newData["index"], attack_value=newData["attack_value"], defense_value=["defense_value"], state=0)
-            newDraw.draw(self.screen, self.num_cards)
-        
-#        for i in range(self.num_opponent_cards):
-#            self.opponent_cards[i].draw(self.screen, self.num_opponent_cards)
-
- #       for card in self.cards:
- #           card.description.draw(self.screen)
+            handData = json.dumps(self.hand[i])
+            newData = json.loads(handData)
+            newDraw = Card(index=newData["index"], attack_value=newData["attack_value"], defense_value=newData["defense_value"], state=0)
+            newDraw.draw(self.screen, i)
 
         pygame.display.update()
         self.clock.tick(60)

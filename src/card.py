@@ -6,14 +6,13 @@ from description import CardDescription
 class Card:
     selected_card = None
 
-    def __init__(self, index, attack_value=0, defense_value=0, is_opponent=False):
+    def __init__(self, index, attack_value=0, defense_value=0, state=0):
         self.index = index
         self.x = 0
         self.y = card_y
 
         self.is_selected = False
         self.is_on_board = False  
-        self.is_opponent = is_opponent
         self.description = CardDescription()
 
         self.attack_value = attack_value
@@ -22,7 +21,7 @@ class Card:
         self.board_position = None  # Nueva variable para la posición en el tablero
         self.is_selected = False
         self.is_on_board = False  
-        self.is_opponent = is_opponent
+        self.state = state
         self.description = CardDescription()
 
     def draw(self, screen, num_cards):
@@ -30,7 +29,7 @@ class Card:
             screen.blit(card_image, (self.x, self.y))
             self.draw_stats(screen, self.x, self.y)  
         else:
-            self.x = card_init_x - (card_width * num_cards) / 2 + card_width * self.index
+            self.x = card_init_x - (card_width * num_cards) / 2 + card_width*1.5 * num_cards - card_init_x/3
             self.y = card_y - 20 if self.is_selected else card_y
             screen.blit(card_image, (self.x, self.y))
             self.draw_stats(screen, self.x, self.y)  
