@@ -25,7 +25,6 @@ class Card:
         self.is_opponent = is_opponent
         self.description = CardDescription()
 
-
     def draw(self, screen, num_cards):
         if self.is_on_board:
             screen.blit(card_image, (self.x, self.y))

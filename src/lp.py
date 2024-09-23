@@ -13,6 +13,9 @@ class Lp:
         self.lp = 20
         self.deck = 35
 
+    ##def receiveDMG(self, damage):
+        ##self.lp-= damage
+
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
         self.draw_stats(screen)

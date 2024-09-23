@@ -36,3 +36,8 @@ class Calculation:
     def calculatePosition(self):
         #TODO: check the board if the player has or not cards and create conditions after that
         return
+    
+    def calculateDMG(self, atkAttacker, statDefender):
+        damage= atkAttacker-statDefender
+        return damage
+    
