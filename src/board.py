@@ -38,6 +38,7 @@ class Board:
             if rect.collidepoint(mouse_pos):
                 pygame.draw.rect(screen, highlight_color, rect)
 
+    # board.py
     def place_card(self, mouse_pos, selected_card, is_opponent=False):
         for i, rect in enumerate(self.rectangles):
             if rect.collidepoint(mouse_pos) and not self.occupied[i]:
@@ -45,22 +46,18 @@ class Board:
                 if selected_card.board_position is not None:
                     self.remove_card(selected_card)
 
-                # Ahora colocamos la carta en la nueva posición
-                if is_opponent and self.is_first_row(i): 
-                    selected_card.move_to_board(rect, i)  # Ahora pasamos el índice del tablero
-                    self.occupied[i] = True
-                    self.occupied_cards.append(selected_card)
-                    Board.card_on_board += 1
-                    print("Cartas en tablero:", Board.card_on_board)
-                    return True
-                elif not is_opponent and self.is_second_row(i):
-                    selected_card.move_to_board(rect, i)  # Ahora pasamos el índice del tablero
-                    self.occupied[i] = True
-                    self.occupied_cards.append(selected_card)
-                    Board.card_on_board += 1
-                    print("Cartas en tablero:", Board.card_on_board)
-                    return True
+                # Posicionamos la carta en las coordenadas del rectángulo clicado
+                card_x= rect.x
+                card_y= rect.y
+                selected_card.move_to_board((card_x, card_y), i)  # Pasamos las coordenadas y el índice
+
+                # Marcamos el espacio como ocupado y agregamos la carta al tablero
+                self.occupied[i] = True
+                self.occupied_cards.append(selected_card)
+                Board.card_on_board += 1
+                return True
         return False
+
 
     # Función para que se pueda actualizar la liberación de la casilla de carta una vez movida 
     def remove_card(self, card):

@@ -20,13 +20,13 @@ class Card:
         self.initial_y = positionY[0]  # Almacena la posición Y inicial
 
     def draw(self, screen, num_cards):
-        # Eleva la carta seleccionada solo una vez
-        draw_y = self.initial_y - 20 if self.is_selected else self.initial_y
-        
         if self.is_on_board:
-            screen.blit(card_image, (positionX[num_cards], positionY[1]))
-            self.draw_stats(screen, positionX[num_cards], positionY[1])  
+            # Usa las coordenadas guardadas del Rect clicado para dibujar la carta en el tablero
+            screen.blit(card_image, (self.position_x, self.position_y))
+            self.draw_stats(screen, self.position_x, self.position_y)  
         else:
+            # Si la carta está en la mano, la dibujamos en su posición habitual
+            draw_y = self.initial_y - 20 if self.is_selected else self.initial_y
             screen.blit(card_image, (positionX[num_cards], draw_y))
             self.draw_stats(screen, positionX[num_cards], draw_y)
 
@@ -59,11 +59,14 @@ class Card:
                 else:
                     self.deselect()
 
-    def move_to_board(self, rect, board_position):
+    def move_to_board(self, position, board_position):
         self.is_on_board = True
         self.board_position = board_position  # Guardamos el índice de la posición en el tablero
-        self.deselect()  # Deseleccionamos la carta después de moverla
 
+        # Actualizamos la posición de la carta en el tablero
+        self.position_x, self.position_y = position
+
+        self.deselect()  # Deseleccionamos la carta después de moverla
     def deselect(self):
         self.is_selected = False
         self.description.hide()
