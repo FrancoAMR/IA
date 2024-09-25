@@ -10,12 +10,16 @@ class Board:
         self.rectangles = []
         self.occupied = [False] * 10
         self.occupied_cards = []  
+        self.board_rect = [None] * 10
         
-        for row in range(2):
-            for col in range(5):
-                rect_x = field_x + col * self.rect_width
-                rect_y = field_y + row * self.rect_height
-                self.rectangles.append(pygame.Rect(rect_x, rect_y, self.rect_width, self.rect_height))
+        # Crear los rectángulos del tablero
+        for index in range(10):
+            col = index % 5  # Columna (0 a 4)
+            row = index // 5  # Fila (0 o 1)
+            rect_x = positionX[col]
+            rect_y = positionY[row + 1]  # Usar el segundo y tercer valor de positionY
+            self.rectangles.append(pygame.Rect(rect_x, rect_y, card_width, card_height))
+            self.board_rect[index] = pygame.Rect(rect_x, rect_y, card_width, card_height)
 
     def is_first_row(self, rect_index):
         return rect_index < 5  
@@ -34,6 +38,7 @@ class Board:
             if rect.collidepoint(mouse_pos):
                 pygame.draw.rect(screen, highlight_color, rect)
 
+    # board.py
     def place_card(self, mouse_pos, selected_card, is_opponent=False):
         for i, rect in enumerate(self.rectangles):
             if rect.collidepoint(mouse_pos) and not self.occupied[i]:
@@ -41,25 +46,21 @@ class Board:
                 if selected_card.board_position is not None:
                     self.remove_card(selected_card)
 
-                # Ahora colocamos la carta en la nueva posición
-                if is_opponent and self.is_first_row(i): 
-                    selected_card.move_to_board(rect, i)  # Ahora pasamos el índice del tablero
-                    self.occupied[i] = True
-                    self.occupied_cards.append(selected_card)
-                    Board.card_on_board += 1
-                    print("Cartas en tablero:", Board.card_on_board)
-                    return True
-                elif not is_opponent and self.is_second_row(i):
-                    selected_card.move_to_board(rect, i)  # Ahora pasamos el índice del tablero
-                    self.occupied[i] = True
-                    self.occupied_cards.append(selected_card)
-                    Board.card_on_board += 1
-                    print("Cartas en tablero:", Board.card_on_board)
-                    return True
+                # Posicionamos la carta en las coordenadas del rectángulo clicado
+                card_x= rect.x
+                card_y= rect.y
+                selected_card.move_to_board((card_x, card_y), i)  # Pasamos las coordenadas y el índice
+
+                # Marcamos el espacio como ocupado y agregamos la carta al tablero
+                self.occupied[i] = True
+                self.occupied_cards.append(selected_card)
+                Board.card_on_board += 1
+                return True
         return False
 
-    #funcion para que se pueda actualizar la liberaación de la casilla de carta una vez movida 
-    def remove_card(self,card):
+
+    # Función para que se pueda actualizar la liberación de la casilla de carta una vez movida 
+    def remove_card(self, card):
         if card.board_position is not None:
             # Liberar la posición ocupada por la carta
             self.occupied[card.board_position] = False

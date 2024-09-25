@@ -21,12 +21,4 @@ def handle_input(cards, num_cards, board, events):
                     for card in cards[:num_cards]:
                         card.click(mouse_pos)
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w and num_cards < 5:
-                num_cards += 1
-                print(num_cards)
-            if event.key == pygame.K_s and num_cards > 0:
-                num_cards -= 1
-                print(num_cards)
-
-    return num_cards
+    #return num_cards

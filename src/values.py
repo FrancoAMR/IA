@@ -51,3 +51,7 @@ lp_height = 146
 lp_image = pygame.transform.scale(lp_image,(lp_width,lp_height))
 lp_x = 0
 lp_y = window_height - lp_height
+
+#x & y positions for matrix
+positionX = [field_x,field_x+card_width,field_x+card_width*2,field_x+card_width*3,field_x+card_width*4]
+positionY = [card_y, window_height/2, window_height/2-card_height, 0]
