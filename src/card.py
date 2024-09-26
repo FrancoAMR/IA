@@ -44,6 +44,11 @@ class Card:
         defense_text_y = attack_text_y
         screen.blit(defense_text, (defense_text_x, defense_text_y))
 
+    def draw_deck(self, screen,deck):
+        font = pygame.font.SysFont(None, 80)
+        deck_text = font.render(str(deck), True, stat_color)
+        screen.blit(deck_text, (lp_x+60, lp_y+80))
+
     def click(self, mouse_pos, i):
         # Verifica que el índice i sea válido
         if i < len(positionX):

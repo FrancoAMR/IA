@@ -35,6 +35,11 @@ class OpponentCard:
         defense_text_x = attack_text_x + 35
         defense_text_y = attack_text_y
         screen.blit(defense_text, (defense_text_x, defense_text_y))
+    
+    def draw_deck(self, screen,deck):
+        font = pygame.font.SysFont(None, 80)
+        deck_text = font.render(str(deck), True, stat_color)
+        screen.blit(deck_text, (window_width-lp_width+60, 80))
 
     def move_to_board(self, rect):
         self.x = rect.x
