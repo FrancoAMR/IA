@@ -20,9 +20,6 @@ class Game:
         self.defense_values = [3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5]
         self.cards = []
         self.fillCards("card")
-<<<<<<< Updated upstream
-=======
-        self.fillCards("opCard")
 
         # Crear la lista caddo, para la mano del usuario (debe eliminarse)
         
@@ -30,7 +27,6 @@ class Game:
         #0= Robo de cartas, 1= Invocacion, 2= Colocacion, 3= Ataque, 4= Calculo de daño, 5= Fin de turno
         #6= ""            , 7= ""        , 8= ""        , 9= ""    , 10= ""            , 11= ""
         self.turnState = 0
->>>>>>> Stashed changes
         
         self.oponent_cards = []
         self.fillCards("opCard")
@@ -82,19 +78,6 @@ class Game:
 
                     if Card.selected_card:
                         if self.board.place_card(mouse_pos, Card.selected_card, is_opponent=False):  
-<<<<<<< Updated upstream
-                            if Card.selected_card in self.cards:
-                                self.cards.remove(Card.selected_card)
-                            Card.selected_card = None
-                    else:
-                        for i in range(self.num_cards):
-                            card = Card(
-                                index=self.hand[i]["index"],
-                                attack_value=self.hand[i]["attack_value"],
-                                defense_value=self.hand[i]["defense_value"],
-                                state=0
-                            )
-=======
                             if Card.selected_card in self.hand:
                                 self.hand.remove(Card.selected_card)
                             Card.selected_card = None
@@ -106,7 +89,6 @@ class Game:
                                 defense_value= self.hand[i]["defense_value"],
                                 state= self.hand[i]["state"]
                                 )
->>>>>>> Stashed changes
                             card.click(mouse_pos, i)
     
     def change_state(self):
@@ -181,15 +163,6 @@ class Game:
         self.board.mouse(self.screen, mouse_pos)
         self.endbutton.draw(self.screen, self.turnState)
 
-<<<<<<< Updated upstream
-        for i in range(self.num_cards):
-            card = Card(
-                index=self.hand[i]["index"],
-                attack_value=self.hand[i]["attack_value"],
-                defense_value=self.hand[i]["defense_value"],
-                state=0
-            )
-=======
         for i in range(len(self.hand)):
             card = Card(
                 index=self.hand[i]["index"],
@@ -197,7 +170,6 @@ class Game:
                 defense_value= self.hand[i]["defense_value"],
                 state=0
                 )
->>>>>>> Stashed changes
             card.draw(self.screen, i)
 
         for j in range(self.num_opponent_cards):
