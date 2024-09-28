@@ -212,8 +212,6 @@ class Game:
             if card.board_Position is not None:
                 pos_x = self.board.rectangles[card.board_Position].x
                 new_X= self.defineX(pos_x)
-                print(new_X)
-                pos_y = self.board.rectangles[card.board_Position].y
                 card.draw(self.screen, new_X, 1)
         for l in range(len(self.opponent_Field)):
             self.opponent_Field[l].draw(self.screen, l)
