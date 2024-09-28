@@ -18,15 +18,15 @@ class Card:
         self.description = CardDescription()
 
     #Dibujado de las cartas
-    def draw(self, screen, num_Cards, pos_Y):
+    def draw(self, screen, pos_X, pos_Y):
         if pos_Y==1: #posY indica que se dibujara en el campo
             draw_Y= positionY[pos_Y]
-            screen.blit(card_Image, (positionX[num_Cards], draw_Y)) #Dibujado en la pantalla
-            self.drawStats(screen, positionX[num_Cards], draw_Y) #Llamada al dibujado de estadisticas
+            screen.blit(card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
         elif pos_Y==0: #posY indica que se dibujara en la mano
             draw_Y= positionY[pos_Y]-20 if self.is_Selected else positionY[pos_Y] #Ubicacion si es seleccionada o no
-            screen.blit(card_Image, (positionX[num_Cards], draw_Y)) #Dibujado en la pantalla
-            self.drawStats(screen, positionX[num_Cards], draw_Y) #Llamada al dibujado de estadisticas
+            screen.blit(card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
     
     # Dibujado de las estadisticas de las cartas
     def drawStats(self, screen, pos_X, pos_Y):
