@@ -210,9 +210,9 @@ class Game:
         #Dibujado de las cartas del campo
         for card in self.player_Field:
             if card.board_Position is not None:
-                pos_x = self.board.rectangles[card.board_Position].x
-                new_X= self.defineX(pos_x)
-                card.draw(self.screen, new_X, 1)
+                pos_x = self.board.rectangles[card.board_Position].x #Obtener la posicion de la hitbox en la que se coloca la carta
+                new_X= self.defineX(pos_x) #Buscar la posicion en el array de ubicaciones de X
+                card.draw(self.screen, new_X, 1)    # Dibujar la carta de acuerdo a la informacion obtenida
         for l in range(len(self.opponent_Field)):
             self.opponent_Field[l].draw(self.screen, l)
         pygame.display.update()
