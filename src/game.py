@@ -87,15 +87,23 @@ class Game:
                 if event.button ==1:
                     match self.turn_State:
                         case 1:
+                            # La carta ha sido seleccionada
                             if Card.selected_card:
+                                # Se detecta que se intenta colocar en el campo
                                 if self.board.placeCard(mouse_Position, Card.selected_card, is_Opponent=False):  
                                     if Card.selected_card in self.player_Hand:
                                         self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
                                     Card.selected_card = None
                                     self.changeState(True)
+                                # Se reinicia la busqueda al darle a otra carta
+                                else:
+                                    for i in range(len(self.player_Hand)):
+                                        self.player_Hand[i].click(mouse_Position, i)
+                            # Se espera a que se seleccione
                             else:
                                 for i in range(len(self.player_Hand)):
                                     self.player_Hand[i].click(mouse_Position, i)
+                                    
                                 
                         case 2:
                             if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
@@ -117,16 +125,17 @@ class Game:
             case 0:
                 self.pickup()
                 self.turn_State= 1
+                print("Cambio a fase de invocacion")
             case 1:
                 if(isTrue==True):
                     self.turn_State= 2
+                    print("Cambio a fase de ataque")
             case 2:
-                print("TODO: Poder cambiar la posicion con click dcho")
-                print("TODO: Poder atacar")
+                TODO: ChangePosition
                 if(isTrue==True):
                     self.turn_State= 3
             case 3:
-                print("TODO: Calculo de daño")
+                TODO: Attack
                 if(isTrue==True):
                     self.turn_State= 4
             case 4:
