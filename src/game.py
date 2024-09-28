@@ -150,10 +150,12 @@ class Game:
                         self.turn_State= 3
                         print("Cambio a fase de ataque")
             case 3:
-                TODO: ChangePosition
                 TODO: Attack
                 if(isTrue==True):
-                    self.turn_State= 3
+                    if(self.atkDecision()):
+                        self.turn_State=4
+                    else:
+                        self.turn_State= 5
             case 4:
                 TODO: DamageStep
                 if(isTrue==True):
