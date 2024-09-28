@@ -18,7 +18,7 @@ class Game:
         self.lp= Lp()
         self.board = Board()
         self.endbutton = Endbutton()
-
+        
         #Valores para las cartas y mazos de ambos jugadores
         self.attack_Values = [0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
         self.defense_Values = [3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5]
@@ -38,8 +38,8 @@ class Game:
         #Manejo de turnos (0: Inicio| 1: Jugador| 2: IA)
         self.active_Turn= 0
 
-        #Manejo de estados del turno (0: Robo de cartas| 1: Invocacion| 2: Posicionamiento y Ataque
-        #                             3: Calculo de daño| 4: Fin de turno)
+        #Manejo de estados del turno (0: Robo de cartas| 1: Invocacion| 2: Posicionamiento| 3: Ataque
+        #                             4: Calculo de daño| 5: Fin de turno)
         self.turn_State= 0
 
         #Correr
@@ -54,7 +54,8 @@ class Game:
                         index=i,
                         attack_Value=self.attack_Values[i],
                         defense_Value=self.defense_Values[i],
-                        state=0
+                        state=0,
+                        behavior= 0
                     )
                     self.player_Deck.append(deck_Card)
             case 1: #Las cartas de la IA
@@ -63,7 +64,8 @@ class Game:
                         index=i,
                         attack_Value=self.attack_Values[i],
                         defense_Value=self.defense_Values[i],
-                        state=0
+                        state=0,
+                        behavior= 0
                     )
                     self.opponent_Deck.append(op_deck_Card)
 
@@ -73,7 +75,7 @@ class Game:
             events= pygame.event.get()
             self.events(events) #Manejo de eventos (clicks y movimientos)
             self.render() #Dibuja los elementos en la pantalla
-            if self.turn_State in [0,1,2,3,4]:
+            if self.turn_State in [0,1,2,3,4,5]:
                 self.changeState()
 
     #Funcion para el tratamiento de eventos
@@ -98,16 +100,24 @@ class Game:
                                 # Se reinicia la busqueda al darle a otra carta
                                 else:
                                     for i in range(len(self.player_Hand)):
-                                        self.player_Hand[i].click(mouse_Position, i)
+                                        self.player_Hand[i].click(mouse_Position, i, 0)
                             # Se espera a que se seleccione
                             else:
+                                #Se crea una instancia para todas las cartas y asi decidir cual se utiliza
                                 for i in range(len(self.player_Hand)):
-                                    self.player_Hand[i].click(mouse_Position, i)
-                                    
-                                
+                                    self.player_Hand[i].click(mouse_Position, i, 0)
+                                     
                         case 2:
                             if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
                                 self.changeState(True)
+                            else:
+                                for i in range(len(self.player_Field)):
+                                    for j in range(len(self.board.cards_Board)):
+                                        if (self.player_Field[i].index==self.board.cards_Board[j].index):
+                                            fieldPosition= self.board.cards_Board[j].board_Position
+                                            self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1)
+                                            self.board.cards_Board[j].behavior=self.player_Field[i].behavior
+                                            break
                         case 3:
                             print("TODO: Calculo de daño")
                         case 4:
@@ -129,16 +139,22 @@ class Game:
             case 1:
                 if(isTrue==True):
                     self.turn_State= 2
-                    print("Cambio a fase de ataque")
+                    print("Cambio a fase de posicion")
+                    Card.selected_card=None
             case 2:
-                TODO: ChangePosition
                 if(isTrue==True):
-                    self.turn_State= 3
+                        self.turn_State= 3
+                        print("Cambio a fase de ataque")
             case 3:
+                TODO: ChangePosition
                 TODO: Attack
                 if(isTrue==True):
-                    self.turn_State= 4
+                    self.turn_State= 3
             case 4:
+                TODO: DamageStep
+                if(isTrue==True):
+                    self.turn_State= 4
+            case 5:
                 self.changeActivePlayer()
                 self.turn_State= 0
                 
@@ -166,7 +182,8 @@ class Game:
                             index= i,
                             attack_Value= self.attack_Values[i],
                             defense_Value= self.defense_Values[i],
-                            state= 0
+                            state= 0,
+                            behavior=0
                         )
                         self.player_Hand.append(new_Hand_Card)
                         self.player_Deck[i].state= -1
@@ -178,7 +195,8 @@ class Game:
                             index= i,
                             attack_Value= self.attack_Values[i],
                             defense_Value= self.defense_Values[i],
-                            state= 0
+                            state= 0,
+                            behavior= 0
                         )
                         self.opponent_Hand.append(new_Hand_Card)
                         self.opponent_Deck[i].state= -1
@@ -190,7 +208,8 @@ class Game:
                             index= i,
                             attack_Value= self.attack_Values[i],
                             defense_Value= self.defense_Values[i],
-                            state= 0
+                            state= 0,
+                            behavior= 0
                         )
                         self.player_Hand.append(new_Hand_Card)
                         self.player_Deck[i].state= -1
@@ -202,16 +221,17 @@ class Game:
                             index= i,
                             attack_Value= self.attack_Values[i],
                             defense_Value= self.defense_Values[i],
-                            state= 0
+                            state= 0,
+                            behavior= 0
                         )
                         self.opponent_Hand.append(new_Hand_Card)
                         self.opponent_Deck[i].state= -1
     
     # Pasar de hand a board
     def moveCard(self, sender, receiver, card):
+        card.is_Selected= False
         receiver.append(card)
         sender.remove(card)
-
 
     # Attack decision(?)
     def atkDecision(self):

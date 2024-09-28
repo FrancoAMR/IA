@@ -3,7 +3,7 @@ from board import Board
 from values import *
 
 class OpponentCard:
-    def __init__(self, index, attack_Value=0, defense_Value=0, state=0):
+    def __init__(self, index, attack_Value=0, defense_Value=0, state=0, behavior= 0):
         #self.image = pygame.transform.flip(card_Image, False, True) 
 
         #Valores de las cartas
@@ -11,6 +11,7 @@ class OpponentCard:
         self.attack_Value = attack_Value
         self.defense_Value = defense_Value
         self.state= state
+        self.behavior= 0
         self.board_Position= None
         self.is_Selected = False
 

@@ -27,7 +27,9 @@ class Board:
         return False
 
     def isSecondRow(self, rect_index):
-        return rect_index >= 5
+        if (rect_index>=5):
+            return True
+        return False
 
     def draw(self, screen):
         screen.blit(field_Image, (field_X, field_Y))
@@ -50,6 +52,18 @@ class Board:
                         return True
             return False
                 
+    def changeFieldCard(self, mouse_Position, selected_card, is_Opponent= False):
+        if is_Opponent== False:
+            for i, rect in enumerate(self.rectangles):
+                if rect.collidepoint(mouse_Position) and self.occupied[self.rectangles.index(rect)]:
+                    if self.isSecondRow(self.rectangles.index(rect)):
+                        match selected_card.behavior:
+                            case 0:
+                                selected_card.behavior= 1 # De ataque a defensa
+                            case 1:
+                                selected_card.behavior= 0 # De defensa a ataque
+                        return True
+            return False
 
     # Función para que se pueda actualizar la liberación de la casilla de carta una vez movida 
     def remove_card(self, card):

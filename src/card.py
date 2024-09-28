@@ -5,12 +5,13 @@ from description import CardDescription
 class Card:
     selected_card = None
 
-    def __init__(self, index, attack_Value=0, defense_Value=0, state=0):
+    def __init__(self, index, attack_Value=0, defense_Value=0, state=0, behavior= 0):
         # Campos de la carta
         self.index = index
         self.attack_Value = attack_Value
         self.defense_Value = defense_Value
         self.state= state
+        self.behavior= behavior #Determina si esta en ataque (0) o defensa (1)
         self.board_Position= None
         # Estado de seleccion inicializado en falso
         self.is_Selected = False
@@ -44,11 +45,10 @@ class Card:
         screen.blit(defense_text, (defense_text_x, defense_text_y))
         
     # Al hacer click
-    def click(self, mouse_Position, i):
+    def click(self, mouse_Position, i, pos_Y):
         # Verifica que el índice i sea válido
         if i < len(positionX):
-            card_rect = pygame.Rect(positionX[i], positionY[0], card_Width, card_Height)
-            print("Carta numero: ", i)
+            card_rect = pygame.Rect(positionX[i], positionY[pos_Y], card_Width, card_Height)
             if card_rect.collidepoint(mouse_Position):
                 if not self.is_Selected:
                     if Card.selected_card:
@@ -59,6 +59,17 @@ class Card:
                 else:
                     self.deselect()
 
+    def fieldClick(self, mouse_Position, i, pos_Y):
+        # Verifica que el índice i sea válido
+        if i < len(positionX):
+            card_rect = pygame.Rect(positionX[i], positionY[pos_Y], card_Width, card_Height)
+            if card_rect.collidepoint(mouse_Position):
+                Card.selected_card= self
+                if(Card.selected_card.behavior==1):
+                    Card.selected_card.behavior=0
+                elif(Card.selected_card.behavior==0):
+                    Card.selected_card.behavior=1
+                Card.selected_card= None
     def deselect(self):
         self.is_Selected = False
         self.description.hide()
