@@ -4,16 +4,16 @@ from values import *
 class Endbutton:
     def __init__(self):
         
-        self.image = end_button_image
-        self.width = end_button_width
-        self.height = end_button_height
+        self.image = end_Button_Image
+        self.width = end_Button_Width
+        self.height = end_Button_Height
 
-        self.x = end_button_x
-        self.y = end_button_y
+        self.x = end_Button_X
+        self.y = end_Button_Y
 
     def draw(self, screen, state):
         screen.blit(self.image, (self.x, self.y))
 
-    def is_clicked(self, mouse_pos):
+    def isClicked(self, mouse_Position):
         button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        return button_rect.collidepoint(mouse_pos)
+        return button_rect.collidepoint(mouse_Position)

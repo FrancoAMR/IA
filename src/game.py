@@ -8,178 +8,209 @@ from input import handle_input
 import random
 
 class Game:
+    #Inicializacion
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Window")
-        self.screen = pygame.display.set_mode((window_width, window_height))
+        self.screen = pygame.display.set_mode((window_Width, window_Height))
         self.clock = pygame.time.Clock()
 
         self.board = Board()
         self.endbutton = Endbutton()
-        self.attack_values = [0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
-        self.defense_values = [3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5]
-        self.cards = []
-        self.fillCards("card")
 
-        # Crear la lista caddo, para la mano del usuario (debe eliminarse)
-        
+        #Valores para las cartas y mazos de ambos jugadores
+        self.attack_Values = [0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
+        self.defense_Values = [3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5]
+        self.player_Deck= []
+        self.opponent_Deck= []
 
-        #0= Robo de cartas, 1= Invocacion, 2= Colocacion, 3= Ataque, 4= Calculo de daño, 5= Fin de turno
-        #6= ""            , 7= ""        , 8= ""        , 9= ""    , 10= ""            , 11= ""
-        self.turnState = 0
-        
-        self.oponent_cards = []
-        self.fillCards("opCard")
-        
-        self.turnState = 0
-        self.hand = []
-        self.num_cards = len(self.hand)
-        self.opHand = []
-        self.num_opponent_cards = len(self.opHand)
-        self.running = True
-        
+        #Llenado de los mazos con los valores designados
+        self.fillCards(0)
+        self.fillCards(1)
+
+        #Manos y campos de ambos jugadores
+        self.player_Hand= []
+        self.opponent_Hand= []
+        self.player_Field= []
+        self.opponent_Field= []
+
+        #Manejo de turnos (0: Inicio| 1: Jugador| 2: IA)
+        self.active_Turn= 0
+
+        #Manejo de estados del turno (0: Robo de cartas| 1: Invocacion| 2: Posicionamiento y Ataque
+        #                             3: Calculo de daño| 4: Fin de turno)
+        self.turn_State= 0
+
+        #Correr
+        self.running= True
+
+    # Llenado del mazo
     def fillCards(self, typeCard):
-        if typeCard == "card":
-            for i in range(30):
-                self.cards.append({
-                    "index": i,
-                    "attack_value": self.attack_values[i],
-                    "defense_value": self.defense_values[i],
-                    "state": 0
-                })
-        elif typeCard == "opCard":
-            for i in range(30):
-                self.oponent_cards.append({
-                    "index": i,
-                    "attack_value": self.attack_values[i],
-                    "defense_value": self.defense_values[i],
-                    "state": 0
-                })
+        match typeCard:
+            case 0: #Las cartas del jugador
+                for i in range(len(self.attack_Values)):
+                    deck_Card= Card(
+                        index=i,
+                        attack_Value=self.attack_Values[i],
+                        defense_Value=self.defense_Values[i],
+                        state=0
+                    )
+                    self.player_Deck.append(deck_Card)
+            case 1: #Las cartas de la IA
+                for i in range(len(self.attack_Values)):
+                    op_deck_Card= Card(
+                        index=i,
+                        attack_Value=self.attack_Values[i],
+                        defense_Value=self.defense_Values[i],
+                        state=0
+                    )
+                    self.opponent_Deck.append(op_deck_Card)
 
+    #Funcion para correr el juego
     def run(self):
         while self.running:
-            events = pygame.event.get()
-            self.events(events)  # Manejo de eventos (clics, movimientos)
-            self.render()  # Dibujar los elementos en pantalla
+            events= pygame.event.get()
+            self.events(events) #Manejo de eventos (clicks y movimientos)
+            self.render() #Dibuja los elementos en la pantalla
+            if self.turn_State in [0,1,2,3,4]:
+                self.changeState()
 
-            if self.turnState in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
-                self.change_state()
-
+    #Funcion para el tratamiento de eventos
     def events(self, events):
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_Position= pygame.mouse.get_pos()
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1: 
-                    if self.endbutton.is_clicked(mouse_pos) and (self.turnState == 3 or self.turnState == 5):
-                        self.change_state()
-
+                if event.button ==1:
+                    if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
+                        self.changeState()
                     if Card.selected_card:
-                        if self.board.place_card(mouse_pos, Card.selected_card, is_opponent=False):  
-                            if Card.selected_card in self.hand:
-                                self.hand.remove(Card.selected_card)
+                        if self.board.placeCard(mouse_Position, Card.selected_card, is_opponent=False):  
+                            if Card.selected_card in self.player_Hand:
+                                self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
                             Card.selected_card = None
                     else:
-                        for i in range(len(self.hand)):
-                            card = Card(
-                                index= self.hand[i]["index"],
-                                attack_value= self.hand[i]["attack_value"],
-                                defense_value= self.hand[i]["defense_value"],
-                                state= self.hand[i]["state"]
-                                )
-                            card.click(mouse_pos, i)
+                        for i in range(len(self.player_Hand)):
+                            self.player_Hand[i].click(mouse_Position, i)
     
-    def change_state(self):
-        match self.turnState:
+    #Cambios de estado
+    def changeState(self):
+        if self.active_Turn==0:
+            self.pickup()
+            self.active_Turn=1
+        match self.turn_State:
             case 0:
                 self.pickup()
-                self.opPickup()         
-                self.turnState = 1
+                self.turn_State= 1
             case 1:
-                self.turnState = 2
-            case 2:
-                self.turnState = 3
-            case 3:
-                if self.atk_decision():
-                    self.turnState = 4
-                else:
-                    self.turnState = 5
-            case 4:
-                self.turnState = 3
-            case 5:
-                self.opPickup()
-                self.turnState = 6
-            case 6:
-                self.turnState = 7
-            case 7:
-                self.turnState = 8
-            case 8:
-                if self.atk_decision():
-                    self.turnState = 9
-                else:
-                    self.turnState = 0
-    
-    def pickup(self):
-        if self.turnState != 0:
-            return 0
-        else:
-            while len(self.hand) < 5:
-                i = random.randint(0, 29)
-                if self.cards[i]["state"] == 1:
-                    continue
-                self.hand.append({
-                    "index": i,
-                    "attack_value": self.attack_values[i],
-                    "defense_value": self.defense_values[i],
-                    "state": 0
-                })
-            self.num_cards = len(self.hand)
-
-    def opPickup(self):
-        if self.turnState != 0:
-            return 0
-        else:
-            while len(self.opHand) < 5:
-                i = random.randint(0, 29)
-                if self.oponent_cards[i]["state"] == 1:
-                    continue
-                self.opHand.append({
-                    "index": i,
-                    "attack_value": self.attack_values[i],
-                    "defense_value": self.defense_values[i],
-                    "state": 0
-                })
-            self.num_opponent_cards = len(self.opHand)
-
-    def atk_decision(self):
-        return True
                 
+                print("TODO: Colocacion de cartas en el campo")
+                # Colocado en comentario para que no se cree un bucle
+                #self.turn_State= 2
+            case 2:
+                print("TODO: Poder cambiar la posicion con click dcho")
+                print("TODO: Poder atacar")
+                self.turn_State= 3
+            case 3:
+                print("TODO: Calculo de daño")
+                self.turn_State= 4
+            case 4:
+                self.changeActivePlayer()
+                self.turn_State= 0
+                
+
+    # Cambiar de jugador
+    def changeActivePlayer(self):
+        match self.active_Turn:
+            case 1:
+                print("Cambiando de jugador a IA")
+                self.active_Turn= 2
+                print("Jugador activo: IA: ", self.active_Turn)
+            case 2:
+                print("Cambiando de IA a jugador")
+                self.active_Turn= 1
+                print("Jugador activo: Jugador: ", self.active_Turn)
+    
+    # Robo del mazo a la mano
+    def pickup(self):
+        match self.active_Turn:
+            case 0: #Llenado de la mano del jugador y la IA
+                while len(self.player_Hand)<5:
+                    i= random.randint(0,len(self.player_Deck)-1)
+                    if(self.player_Deck[i].state== 0):
+                        new_Hand_Card= Card(
+                            index= i,
+                            attack_Value= self.attack_Values[i],
+                            defense_Value= self.defense_Values[i],
+                            state= 0
+                        )
+                        self.player_Hand.append(new_Hand_Card)
+                        self.player_Deck[i].state= -1
+                        
+                while len(self.opponent_Hand)<5:
+                    i= random.randint(0,len(self.player_Deck)-1)
+                    if(self.opponent_Deck[i].state== 0):
+                        new_Hand_Card= OpponentCard(
+                            index= i,
+                            attack_Value= self.attack_Values[i],
+                            defense_Value= self.defense_Values[i],
+                            state= 0
+                        )
+                        self.opponent_Hand.append(new_Hand_Card)
+                        self.opponent_Deck[i].state= -1
+            case 1: # Llenado unicamente de la mano del jugador
+                while len(self.player_Hand)<5:
+                    i= random.randint(0,len(self.player_Deck)-1)
+                    if(self.player_Deck[i].state== 0):
+                        new_Hand_Card= Card(
+                            index= i,
+                            attack_Value= self.attack_Values[i],
+                            defense_Value= self.defense_Values[i],
+                            state= 0
+                        )
+                        self.player_Hand.append(new_Hand_Card)
+                        self.player_Deck[i].state= -1
+            case 2: #Llenado unicamente de la mano de la IA
+                while len(self.opponent_Hand)<5:
+                    i= random.randint(0,len(self.player_Deck)-1)
+                    if(self.opponent_Deck[i].state== 0):
+                        new_Hand_Card= OpponentCard(
+                            index= i,
+                            attack_Value= self.attack_Values[i],
+                            defense_Value= self.defense_Values[i],
+                            state= 0
+                        )
+                        self.opponent_Hand.append(new_Hand_Card)
+                        self.opponent_Deck[i].state= -1
+    
+    # Pasar de hand a board
+    def moveCard(self, sender, receiver, card):
+        receiver.append(card)
+        sender.remove(card)
+
+
+    # Attack decision(?)
+    def atkDecision(self):
+        return True
+    
+    # Funcion de renderizado
     def render(self):
-        self.screen.fill(background_color)
+        self.screen.fill(background_Color)
         mouse_pos = pygame.mouse.get_pos()
         self.board.draw(self.screen)
         self.board.mouse(self.screen, mouse_pos)
-        self.endbutton.draw(self.screen, self.turnState)
-
-        for i in range(len(self.hand)):
-            card = Card(
-                index=self.hand[i]["index"],
-                attack_value= self.hand[i]["attack_value"],
-                defense_value= self.hand[i]["defense_value"],
-                state=0
-                )
-            card.draw(self.screen, i)
-
-        for j in range(self.num_opponent_cards):
-            opCard = OpponentCard(
-                index=self.opHand[j]["index"],
-                attack_value=self.opHand[j]["attack_value"],
-                defense_value=self.opHand[j]["defense_value"],
-                state=0
-            )
-            opCard.draw(self.screen, j)
-
+        self.endbutton.draw(self.screen, self.turn_State)
+        # Dibujado de las cartas de la mano
+        for i in range(len(self.player_Hand)):
+            self.player_Hand[i].draw(self.screen, i, 0)
+        for j in range(len(self.opponent_Hand)):
+            self.opponent_Hand[j].draw(self.screen, j)
+        #Dibujado de las cartas del campo
+        for k in range(len(self.player_Field)):
+            self.player_Field[k].draw(self.screen, k, 1)
+        for l in range(len(self.opponent_Field)):
+            self.opponent_Field[l].draw(self.screen, l)
         pygame.display.update()
         self.clock.tick(60)
