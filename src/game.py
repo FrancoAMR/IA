@@ -1,5 +1,6 @@
 import pygame
 from values import *
+from lp import Lp
 from board import Board
 from card import Card
 from opponent_card import OpponentCard
@@ -14,7 +15,7 @@ class Game:
         pygame.display.set_caption("Window")
         self.screen = pygame.display.set_mode((window_Width, window_Height))
         self.clock = pygame.time.Clock()
-
+        self.lp= Lp()
         self.board = Board()
         self.endbutton = Endbutton()
 
@@ -202,6 +203,7 @@ class Game:
         self.board.draw(self.screen)
         self.board.mouse(self.screen, mouse_pos)
         self.endbutton.draw(self.screen, self.turn_State)
+        self.lp.draw(self.screen)
         # Dibujado de las cartas de la mano
         for i in range(len(self.player_Hand)):
             self.player_Hand[i].draw(self.screen, i, 0)

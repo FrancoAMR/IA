@@ -4,12 +4,12 @@ from values import *
 class Lp:
     def __init__(self):
         
-        self.image = lp_image
-        self.width = lp_width
-        self.height = lp_height
+        self.image = lp_Image
+        self.width = lp_Width
+        self.height = lp_Height
 
-        self.x = lp_x
-        self.y = lp_y
+        self.x = lp_X
+        self.y = lp_Y
         self.lp = 20
         #self.deck = 35
 
@@ -26,7 +26,7 @@ class Lp:
     def draw_stats(self, screen):
         font = pygame.font.SysFont(None, 80)
         
-        lp_text = font.render(str(self.lp), True, stat_color)
+        lp_text = font.render(str(self.lp), True, stat_Color)
         #deck_text = font.render(str(self.deck), True, stat_color)
 
         text_x = self.x + 60
