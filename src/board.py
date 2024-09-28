@@ -38,8 +38,9 @@ class Board:
 
     def placeCard(self, mouse_Position, selected_card, is_opponent=False):
         for i, rect in enumerate(self.rectangles):
-            if rect.collidepoint(mouse_Position) and not self.occupied[i]:
-                self.occupied[i] = True
+            if rect.collidepoint(mouse_Position) and not self.occupied[self.rectangles.index(rect)]:
+                self.occupied[self.rectangles.index(rect)] = True
+                selected_card.board_Position = self.rectangles.index(rect)  # Guarda la posición de la carta
                 self.cards_Board.append(selected_card)
                 Board.card_on_board += 1
                 return True

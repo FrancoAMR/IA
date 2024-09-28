@@ -208,9 +208,19 @@ class Game:
         for j in range(len(self.opponent_Hand)):
             self.opponent_Hand[j].draw(self.screen, j)
         #Dibujado de las cartas del campo
-        for k in range(len(self.player_Field)):
-            self.player_Field[k].draw(self.screen, k, 1)
+        for card in self.player_Field:
+            if card.board_Position is not None:
+                pos_x = self.board.rectangles[card.board_Position].x
+                new_X= self.defineX(pos_x)
+                print(new_X)
+                pos_y = self.board.rectangles[card.board_Position].y
+                card.draw(self.screen, new_X, 1)
         for l in range(len(self.opponent_Field)):
             self.opponent_Field[l].draw(self.screen, l)
         pygame.display.update()
         self.clock.tick(60)
+
+    def defineX(self, pos_x):
+        for i in range(5):
+            if pos_x== positionX[i]:
+                return i

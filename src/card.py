@@ -11,6 +11,7 @@ class Card:
         self.attack_Value = attack_Value
         self.defense_Value = defense_Value
         self.state= state
+        self.board_Position= None
         # Estado de seleccion inicializado en falso
         self.is_Selected = False
         # Descripcion de la carta (IMG), probablemente se borre
