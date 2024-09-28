@@ -59,7 +59,7 @@ class Game:
                     self.player_Deck.append(deck_Card)
             case 1: #Las cartas de la IA
                 for i in range(len(self.attack_Values)):
-                    op_deck_Card= Card(
+                    op_deck_Card= OpponentCard(
                         index=i,
                         attack_Value=self.attack_Values[i],
                         defense_Value=self.defense_Values[i],
@@ -88,7 +88,7 @@ class Game:
                     if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
                         self.changeState()
                     if Card.selected_card:
-                        if self.board.placeCard(mouse_Position, Card.selected_card, is_opponent=False):  
+                        if self.board.placeCard(mouse_Position, Card.selected_card, is_Opponent=False):  
                             if Card.selected_card in self.player_Hand:
                                 self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
                             Card.selected_card = None
@@ -208,7 +208,7 @@ class Game:
         for i in range(len(self.player_Hand)):
             self.player_Hand[i].draw(self.screen, i, 0)
         for j in range(len(self.opponent_Hand)):
-            self.opponent_Hand[j].draw(self.screen, j)
+            self.opponent_Hand[j].draw(self.screen, j, 3)
         #Dibujado de las cartas del campo
         for card in self.player_Field:
             if card.board_Position is not None:

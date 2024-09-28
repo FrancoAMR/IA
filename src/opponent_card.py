@@ -4,32 +4,35 @@ from values import *
 
 class OpponentCard:
     def __init__(self, index, attack_Value=0, defense_Value=0, state=0):
-        self.image = pygame.transform.flip(card_Image, False, True) 
-        self.width = card_Width
-        self.height = card_Height
+        #self.image = pygame.transform.flip(card_Image, False, True) 
+
+        #Valores de las cartas
         self.index = index
-        self.is_selected = False
-
-
         self.attack_Value = attack_Value
         self.defense_Value = defense_Value
-        
-        self.is_on_board = False  # Añadir esto para manejar las cartas que están en el tablero
+        self.state= state
+        self.board_Position= None
+        self.is_Selected = False
 
-    def draw(self, screen, num_cards):
-        screen.blit(self.image, (positionX[num_cards],positionY[3]))
-        self.draw_stats(screen, num_cards)
+    #Dibujado de las cartas del oponente
+    def draw(self, screen, pos_X, pos_Y):
+        if pos_Y==2: #posY indica que se dibujara en el campo
+            draw_Y= positionY[pos_Y]
+            screen.blit(card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
+        elif pos_Y==3: #posY indica que se dibujara en la mano
+            draw_Y= positionY[pos_Y]-20 if self.is_Selected else positionY[pos_Y] #Ubicacion si es seleccionada o no
+            screen.blit(card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
 
-    def draw_stats(self, screen, num_cards):
-        font = pygame.font.SysFont(None, 24)
-        
-        attack_text = font.render(str(self.attack_Value), True, stat_Color)
-        defense_text = font.render(str(self.defense_Value), True, stat_Color)
-        attack_text = pygame.transform.flip(attack_text, False, True)
-        defense_text = pygame.transform.flip(defense_text, False, True)
-        
-        attack_text_x = positionX[num_cards]+ 30
-        attack_text_y = positionY[3] + 10
+    def drawStats(self, screen, pos_X, pos_Y):
+        # Definicion de la fuente
+        font= pygame.font.SysFont(None, 24)
+        # Dibujado de los textos de estadisticas y su color
+        attack_text = font.render(str(self.attack_Value), True, (101, 101, 102))
+        defense_text = font.render(str(self.defense_Value), True, (101, 101, 102))
+        attack_text_x = pos_X + 30
+        attack_text_y = pos_Y + 142
         screen.blit(attack_text, (attack_text_x, attack_text_y))
         
         defense_text_x = attack_text_x + 35
