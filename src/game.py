@@ -108,7 +108,7 @@ class Game:
                                     self.player_Hand[i].click(mouse_Position, i, 0)
                                      
                         case 2:
-                            if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
+                            if self.endbutton.isClicked(mouse_Position):
                                 self.changeState(True)
                             else:
                                 for i in range(len(self.player_Field)):
@@ -119,9 +119,13 @@ class Game:
                                             self.board.cards_Board[j].behavior=self.player_Field[i].behavior
                                             break
                         case 3:
-                            print("TODO: Calculo de daño")
+                            TODO: cardBattle
+                            if self.endbutton.isClicked(mouse_Position):
+                                self.changeState(True)
                         case 4:
-                            if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
+                            TODO: damageStep
+                        case 5:
+                            if self.endbutton.isClicked(mouse_Position):
                                 self.changeState(True)
                     
                     
