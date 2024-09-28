@@ -85,19 +85,31 @@ class Game:
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button ==1:
-                    if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
-                        self.changeState()
-                    if Card.selected_card:
-                        if self.board.placeCard(mouse_Position, Card.selected_card, is_Opponent=False):  
-                            if Card.selected_card in self.player_Hand:
-                                self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
-                            Card.selected_card = None
-                    else:
-                        for i in range(len(self.player_Hand)):
-                            self.player_Hand[i].click(mouse_Position, i)
+                    match self.turn_State:
+                        case 1:
+                            if Card.selected_card:
+                                if self.board.placeCard(mouse_Position, Card.selected_card, is_Opponent=False):  
+                                    if Card.selected_card in self.player_Hand:
+                                        self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
+                                    Card.selected_card = None
+                                    self.changeState(True)
+                            else:
+                                for i in range(len(self.player_Hand)):
+                                    self.player_Hand[i].click(mouse_Position, i)
+                                
+                        case 2:
+                            if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
+                                self.changeState(True)
+                        case 3:
+                            print("TODO: Calculo de daño")
+                        case 4:
+                            if self.endbutton.isClicked(mouse_Position) and (self.turn_State== 2 or self.turn_State== 4):
+                                self.changeState(True)
+                    
+                    
     
     #Cambios de estado
-    def changeState(self):
+    def changeState(self, isTrue= False):
         if self.active_Turn==0:
             self.pickup()
             self.active_Turn=1
@@ -106,17 +118,17 @@ class Game:
                 self.pickup()
                 self.turn_State= 1
             case 1:
-                
-                print("TODO: Colocacion de cartas en el campo")
-                # Colocado en comentario para que no se cree un bucle
-                #self.turn_State= 2
+                if(isTrue==True):
+                    self.turn_State= 2
             case 2:
                 print("TODO: Poder cambiar la posicion con click dcho")
                 print("TODO: Poder atacar")
-                self.turn_State= 3
+                if(isTrue==True):
+                    self.turn_State= 3
             case 3:
                 print("TODO: Calculo de daño")
-                self.turn_State= 4
+                if(isTrue==True):
+                    self.turn_State= 4
             case 4:
                 self.changeActivePlayer()
                 self.turn_State= 0
