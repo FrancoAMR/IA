@@ -1,10 +1,12 @@
 import pygame
 from values import *
 from lp import Lp
+from opponent_lp import OpponentLp
 from board import Board
 from card import Card
 from opponent_card import OpponentCard
 from endbutton import Endbutton
+from combat import Combat
 from input import handle_input
 import random
 
@@ -16,8 +18,10 @@ class Game:
         self.screen = pygame.display.set_mode((window_Width, window_Height))
         self.clock = pygame.time.Clock()
         self.lp= Lp()
+        self.op_lp = OpponentLp()
         self.board = Board()
         self.endbutton = Endbutton()
+        self.combat = Combat()
         
         #Valores para las cartas y mazos de ambos jugadores
         self.attack_Values = [0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
@@ -41,6 +45,8 @@ class Game:
         #Manejo de estados del turno (0: Robo de cartas| 1: Invocacion| 2: Posicionamiento| 3: Ataque
         #                             4: Calculo de daño| 5: Fin de turno)
         self.turn_State= 0
+
+        self.count = 0
 
         #Correr
         self.running= True
@@ -111,15 +117,32 @@ class Game:
                             if self.endbutton.isClicked(mouse_Position):
                                 self.changeState(True)
                             else:
+                                #----
                                 for i in range(len(self.player_Field)):
                                     for j in range(len(self.board.cards_Board)):
                                         if (self.player_Field[i].index==self.board.cards_Board[j].index):
                                             fieldPosition= self.board.cards_Board[j].board_Position
-                                            self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1)
-                                            self.board.cards_Board[j].behavior=self.player_Field[i].behavior
-                                            break
+                                #---Algoritmo de búsqueda de carta (TODO: Hacerla función)
+                                            if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
+                                                self.player_Field[i].changeBehavior()
+                                                self.board.cards_Board[j].behavior=self.player_Field[i].behavior
+                                                break
                         case 3:
-                            TODO: cardBattle
+                            found = False
+                            for i in range(len(self.player_Field)):
+                                    for j in range(len(self.board.cards_Board)):
+                                        if (self.player_Field[i].index==self.board.cards_Board[j].index):
+                                            fieldPosition= self.board.cards_Board[j].board_Position
+                                        if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
+                                            if len(self.opponent_Field) == 0 and self.player_Field[i].behavior==0:
+                                                self.combat.resolve(self.player_Field[i], None, self.lp, self.op_lp)
+                                                found = True
+                                                break
+                                    if found == True:
+                                        break
+                                            
+
+
                             if self.endbutton.isClicked(mouse_Position):
                                 self.changeState(True)
                         case 4:
@@ -142,9 +165,11 @@ class Game:
                 print("Cambio a fase de invocacion")
             case 1:
                 if(isTrue==True):
-                    self.turn_State= 2
-                    print("Cambio a fase de posicion")
-                    Card.selected_card=None
+                    if self.count == 1:
+                        self.turn_State= 2
+                        print("Cambio a fase de posicion")
+                        Card.selected_card=None
+                    self.count = self.count + 1
             case 2:
                 if(isTrue==True):
                         self.turn_State= 3
@@ -251,6 +276,7 @@ class Game:
         self.board.mouse(self.screen, mouse_pos)
         self.endbutton.draw(self.screen, self.turn_State)
         self.lp.draw(self.screen)
+        self.op_lp.draw(self.screen)
         # Dibujado de las cartas de la mano
         for i in range(len(self.player_Hand)):
             self.player_Hand[i].draw(self.screen, i, 0)

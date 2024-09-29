@@ -23,13 +23,12 @@ class Endbutton:
         if state == 3:
             txt_1 = "Terminar"
             txt_2 = "turno"
-            button_text1 = font.render(txt_1, True, stat_color)
-            button_text2 = font.render(txt_2, True, stat_color)
+            button_text1 = font.render(txt_1, True, stat_Color)
+            button_text2 = font.render(txt_2, True, stat_Color)
             screen.blit(button_text1, (state_text_x,state_text_y))
             screen.blit(button_text2, (state_text_x,state_text_y+15))
 
     def isClicked(self, mouse_Position):
         button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.click_flag = button_rect.collidepoint(mouse_Position)
-        print("Botón presionado: ", self.click_flag)
         return self.click_flag

@@ -13,8 +13,10 @@ class Lp:
         self.lp = 20
         #self.deck = 35
 
-    ##def receiveDMG(self, damage):
-        ##self.lp-= damage
+    def receiveDMG(self, damage): 
+        self.lp -= damage
+        if self.lp < 0:
+            self.lp = 0  # Los life points no pueden ser negativos
     
     def decrease_deck(self, num_decreased):
         self.deck = self.deck - num_decreased
