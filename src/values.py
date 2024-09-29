@@ -20,10 +20,12 @@ field_X = window_Width / 2 - field_Width / 2
 field_Y = window_Height / 2 - field_Height / 2
 
 # Cards
-card_Image = pygame.image.load("assets/images/card.png")
+red_Card_Image = pygame.image.load("assets/images/redCard.png")
+blue_Card_Image = pygame.image.load("assets/images/blueCard.png")
 card_Width = 5*window_Width/64 #100
 card_Height = 17*window_Height/72 #170
-card_Image = pygame.transform.scale(card_Image, (card_Width, card_Height))
+red_Card_Image = pygame.transform.scale(red_Card_Image, (card_Width, card_Height))
+blue_Card_Image = pygame.transform.scale(blue_Card_Image, (card_Width, card_Height))
 card_Init_X = window_Width / 2
 card_Y = window_Height - card_Height
 

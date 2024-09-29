@@ -19,11 +19,11 @@ class OpponentCard:
     def draw(self, screen, pos_X, pos_Y):
         if pos_Y==2: #posY indica que se dibujara en el campo
             draw_Y= positionY[pos_Y]
-            screen.blit(card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
             self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
         elif pos_Y==3: #posY indica que se dibujara en la mano
             draw_Y= positionY[pos_Y]-20 if self.is_Selected else positionY[pos_Y] #Ubicacion si es seleccionada o no
-            screen.blit(card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
             self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
 
     def drawStats(self, screen, pos_X, pos_Y):
