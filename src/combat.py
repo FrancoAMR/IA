@@ -24,7 +24,7 @@ class combat:
                 print(f"¡Ambas cartas son destruidas! Ambos jugadores pierden {self.attacker_Card.attack_Value} puntos de vida.")
                 return 'ambas_destruidas'
             
-        elif self.attacked_Card.behavior==1 :
+        elif self.attacked_Card.behavior==1 :   
             if self.attacker_Card.attack_Value > self.attacked_Card.defense_Value:
                 print(f"¡Carta atacada destruida!")
                 return 'atacado_destruido'
