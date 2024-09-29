@@ -3,11 +3,11 @@ from values import *
 
 class CardDescription:
     def __init__(self):
-        self.image = card_desc_image
-        self.width = card_desc_width
-        self.height = card_desc_height
-        self.x = card_desc_x
-        self.y = card_desc_y
+        self.image = card_Desc_Image
+        self.width = card_Desc_Width
+        self.height = card_Desc_Height
+        self.x = card_Desc_X
+        self.y = card_Desc_Y
         self.visible = False
 
     def show(self):

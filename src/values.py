@@ -1,57 +1,57 @@
 import pygame
 
 # Window Size
-window_width = 1280
-window_height = 720
+window_Width = 1280
+window_Height = 720
 
 # Colors
 gray = (234, 234, 234)
-highlight_color = (239, 160, 160, 165)
-background_color = (96, 155, 99, 165)
-stat_color = (101, 101, 102)
-phase1_color = (255, 233, 163)
+highlight_Color = (239, 160, 160, 165)
+background_Color = (96, 155, 99, 165)
+stat_Color = (101, 101, 102)
+phase1_Color = (255, 233, 163)
 
 # Field
-field_image = pygame.image.load("assets/images/field.png")
-field_width = 25*window_width/64
-field_height = 17*window_height/36
-field_image = pygame.transform.scale(field_image, (field_width, field_height))
-field_x = window_width / 2 - field_width / 2
-field_y = window_height / 2 - field_height / 2
+field_Image = pygame.image.load("assets/images/field.png")
+field_Width = 25*window_Width/64
+field_Height = 17*window_Height/36
+field_Image = pygame.transform.scale(field_Image, (field_Width, field_Height))
+field_X = window_Width / 2 - field_Width / 2
+field_Y = window_Height / 2 - field_Height / 2
 
 # Cards
-card_image = pygame.image.load("assets/images/card.png")
-card_width = 5*window_width/64 #100
-card_height = 17*window_height/72 #170
-card_image = pygame.transform.scale(card_image, (card_width, card_height))
-card_init_x = window_width / 2
-card_y = window_height - card_height
+card_Image = pygame.image.load("assets/images/card.png")
+card_Width = 5*window_Width/64 #100
+card_Height = 17*window_Height/72 #170
+card_Image = pygame.transform.scale(card_Image, (card_Width, card_Height))
+card_Init_X = window_Width / 2
+card_Y = window_Height - card_Height
 
 # Cards description
-card_desc_image = pygame.image.load("assets/images/card_desc.png")
-card_desc_width = 17*window_width/128
-card_desc_height = 17*window_height/36
-card_desc_image = pygame.transform.scale(card_desc_image, (card_desc_width, card_desc_height))
-card_desc_x = 0
-card_desc_y = field_y
+card_Desc_Image = pygame.image.load("assets/images/card_desc.png")
+card_Desc_Width = 17*window_Width/128
+card_Desc_Height = 17*window_Height/36
+card_Desc_Image = pygame.transform.scale(card_Desc_Image, (card_Desc_Width, card_Desc_Height))
+card_Desc_X = 0
+card_Desc_Y = field_Y
 
 # End Turn Button
-end_button_image = pygame.image.load("assets/images/endphase.png")
-mask = pygame.mask.from_surface(end_button_image)
-end_button_width = 100
-end_button_height = 100
-end_button_image = pygame.transform.scale(end_button_image,(end_button_width,end_button_height))
-end_button_x = field_x + field_width - end_button_width/2 + 100
-end_button_y = field_y + field_height/2 - end_button_height/2
+end_Button_Image = pygame.image.load("assets/images/endphase.png")
+mask = pygame.mask.from_surface(end_Button_Image)
+end_Button_Width = 100
+end_Button_Height = 100
+end_Button_Image = pygame.transform.scale(end_Button_Image,(end_Button_Width,end_Button_Height))
+end_Button_X = field_X + field_Width - end_Button_Width/2 + 100
+end_Button_Y = field_Y + field_Height/2 - end_Button_Height/2
 
 # LP
-lp_image = pygame.image.load("assets/images/lp.png")
-lp_width = 200
-lp_height = 146
-lp_image = pygame.transform.scale(lp_image,(lp_width,lp_height))
-lp_x = 0
-lp_y = window_height - lp_height
+lp_Image = pygame.image.load("assets/images/lp.png")
+lp_Width = 200
+lp_Height = 146
+lp_Image = pygame.transform.scale(lp_Image,(lp_Width,lp_Height))
+lp_X = 0
+lp_Y = window_Height - lp_Height
 
 #x & y positions for matrix
-positionX = [field_x,field_x+card_width,field_x+card_width*2,field_x+card_width*3,field_x+card_width*4]
-positionY = [card_y, window_height/2, window_height/2-card_height, 0]
+positionX = [field_X,field_X+card_Width,field_X+card_Width*2,field_X+card_Width*3,field_X+card_Width*4]
+positionY = [card_Y, window_Height/2, window_Height/2-card_Height, 0]
