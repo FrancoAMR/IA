@@ -145,14 +145,17 @@ class Game:
 
                             if self.endbutton.isClicked(mouse_Position):
                                 self.changeState(True)
+                                self.returnState()
                         case 4:
                             TODO: damageStep
                         case 5:
                             if self.endbutton.isClicked(mouse_Position):
                                 self.changeState(True)
                     
-                    
-    
+    def returnState(self):
+        for i in range(len(self.player_Field)):
+            self.player_Field[i].state=0
+
     #Cambios de estado
     def changeState(self, isTrue= False):
         if self.active_Turn==0:
@@ -167,6 +170,7 @@ class Game:
                 if(isTrue==True):
                     if self.count == 1:
                         self.turn_State= 2
+                        self.count=0
                         print("Cambio a fase de posicion")
                         Card.selected_card=None
                     self.count = self.count + 1
@@ -279,7 +283,7 @@ class Game:
         self.op_lp.draw(self.screen)
         # Dibujado de las cartas de la mano
         for i in range(len(self.player_Hand)):
-            self.player_Hand[i].draw(self.screen, i, 0)
+            self.player_Hand[i].draw(self.screen, i, 0, 0)
         for j in range(len(self.opponent_Hand)):
             self.opponent_Hand[j].draw(self.screen, j, 3)
         #Dibujado de las cartas del campo
@@ -287,7 +291,7 @@ class Game:
             if card.board_Position is not None:
                 pos_x = self.board.rectangles[card.board_Position].x #Obtener la posicion de la hitbox en la que se coloca la carta
                 new_X= self.defineX(pos_x) #Buscar la posicion en el array de ubicaciones de X
-                card.draw(self.screen, new_X, 1)    # Dibujar la carta de acuerdo a la informacion obtenida
+                card.draw(self.screen, new_X, 1, card.behavior)    # Dibujar la carta de acuerdo a la informacion obtenida
         for l in range(len(self.opponent_Field)):
             self.opponent_Field[l].draw(self.screen, l)
         pygame.display.update()

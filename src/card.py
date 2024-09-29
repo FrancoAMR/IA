@@ -10,7 +10,7 @@ class Card:
         self.index = index
         self.attack_Value = attack_Value
         self.defense_Value = defense_Value
-        self.state= state
+        self.state= state # state -1= No disponible, state 0= Disponible, state 1= No disponible temporalmente
         self.behavior= behavior #Determina si esta en ataque (0) o defensa (1)
         self.board_Position= None
         # Estado de seleccion inicializado en falso
@@ -20,10 +20,14 @@ class Card:
         self.description = CardDescription()
 
     #Dibujado de las cartas
-    def draw(self, screen, pos_X, pos_Y):
+    def draw(self, screen, pos_X, pos_Y, behavior):
         if pos_Y==1: #posY indica que se dibujara en el campo
             draw_Y= positionY[pos_Y]
-            screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            match behavior:
+                case 0:
+                    screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+                case 1:
+                    screen.blit(blue_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
             self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
         elif pos_Y==0: #posY indica que se dibujara en la mano
             draw_Y= positionY[pos_Y]-20 if self.is_Selected else positionY[pos_Y] #Ubicacion si es seleccionada o no
