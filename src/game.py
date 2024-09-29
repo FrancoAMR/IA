@@ -7,6 +7,7 @@ from card import Card
 from opponent_card import OpponentCard
 from endbutton import Endbutton
 from combat import Combat
+from ia import AI
 from input import handle_input
 import random
 
@@ -18,10 +19,11 @@ class Game:
         self.screen = pygame.display.set_mode((window_Width, window_Height))
         self.clock = pygame.time.Clock()
         self.lp= Lp()
-        self.op_lp = OpponentLp()
+        self.op_Lp = OpponentLp()
         self.board = Board()
         self.endbutton = Endbutton()
         self.combat = Combat()
+        #self.ia = AI()
         
         #Valores para las cartas y mazos de ambos jugadores
         self.attack_Values = [0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
@@ -136,7 +138,7 @@ class Game:
                                                 fieldPosition= self.board.cards_Board[j].board_Position
                                             if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
                                                 if len(self.opponent_Field) == 0 and self.player_Field[i].behavior==0:
-                                                    self.combat.resolve(self.player_Field[i], None, self.lp, self.op_lp)
+                                                    self.combat.resolve(self.player_Field[i], None, self.lp, self.op_Lp)
                                                     found = True
                                                     break
                                         if found == True:
@@ -158,9 +160,15 @@ class Game:
 
     #Cambios de estado
     def changeState(self, isTrue= False):
+        #Encendido del juego
         if self.active_Turn==0:
             self.pickup()
             self.active_Turn=1
+        #Turno de la IA
+        if self.active_Turn==2:
+            ai = AI(self.opponent_Hand, self.opponent_Field, self.player_Field, self.op_Lp)
+            self.changeActivePlayer()
+
         match self.turn_State:
             case 0:
                 self.pickup()
@@ -192,7 +200,7 @@ class Game:
             case 5:
                 self.changeActivePlayer()
                 self.turn_State= 0
-            
+        
                 
 
     # Cambiar de jugador
@@ -281,7 +289,7 @@ class Game:
         self.board.mouse(self.screen, mouse_pos)
         self.endbutton.draw(self.screen, self.turn_State)
         self.lp.draw(self.screen)
-        self.op_lp.draw(self.screen)
+        self.op_Lp.draw(self.screen)
         # Dibujado de las cartas de la mano
         for i in range(len(self.player_Hand)):
             self.player_Hand[i].draw(self.screen, i, 0, 0)
@@ -305,7 +313,7 @@ class Game:
             
 
 
-    ai = AI(ai_hand, ai_field, player_field, ai_lp)
+    #ai = AI(ai_hand, ai_field, player_field, ai_lp)
     def ai_turn(self):
         # Acciones que la IA toma en su turno
         self.ai.make_move()

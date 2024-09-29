@@ -67,4 +67,5 @@ class AI:
         for opponent_card in self.opponent_field:
             if opponent_card.attack_Value < self.field[0].attack_Value: 
                 best_target = opponent_card
+                break
         return best_target
