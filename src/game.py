@@ -192,6 +192,7 @@ class Game:
             case 5:
                 self.changeActivePlayer()
                 self.turn_State= 0
+            
                 
 
     # Cambiar de jugador
@@ -301,3 +302,13 @@ class Game:
         for i in range(5):
             if pos_x== positionX[i]:
                 return i
+            
+
+
+    ai = AI(ai_hand, ai_field, player_field, ai_lp)
+    def ai_turn(self):
+        # Acciones que la IA toma en su turno
+        self.ai.make_move()
+        self.ai.attack()
+
+        
