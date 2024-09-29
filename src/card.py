@@ -8,8 +8,20 @@ class Card:
 
     def __init__(self, index, attack_value=0, defense_value=0, state=0):
         self.index = index
+<<<<<<< Updated upstream
         self.is_selected = False
         self.is_on_board = False  
+=======
+        self.attack_Value = attack_Value
+        self.defense_Value = defense_Value
+        self.state= state
+        self.behavior= behavior #Determina si esta en ataque (0) o defensa (1)
+        self.board_Position= None
+        # Estado de seleccion inicializado en falso
+        self.is_Selected = False
+        self.fieldCardClickedFlag = False
+        # Descripcion de la carta (IMG), probablemente se borre
+>>>>>>> Stashed changes
         self.description = CardDescription()
 
         self.attack_value = attack_value
@@ -59,6 +71,7 @@ class Card:
                 else:
                     self.deselect()
 
+<<<<<<< Updated upstream
     def move_to_board(self, position, board_position):
         self.is_on_board = True
         self.board_position = board_position  # Guardamos el índice de la posición en el tablero
@@ -67,6 +80,21 @@ class Card:
         self.position_x, self.position_y = position
 
         self.deselect()  # Deseleccionamos la carta después de moverla
+=======
+    def fieldClick(self, mouse_Position, i, pos_Y):
+        # Verifica que el índice i sea válido
+        if i < len(positionX):
+            card_rect = pygame.Rect(positionX[i], positionY[pos_Y], card_Width, card_Height)
+            self.cardClickedFlag = card_rect.collidepoint(mouse_Position)
+            return self.cardClickedFlag
+    def changeBehavior(self):
+        Card.selected_card= self
+        if(Card.selected_card.behavior==1):
+            Card.selected_card.behavior=0
+        elif(Card.selected_card.behavior==0):
+            Card.selected_card.behavior=1
+        Card.selected_card= None
+>>>>>>> Stashed changes
     def deselect(self):
         self.is_selected = False
         self.description.hide()

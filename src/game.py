@@ -65,6 +65,7 @@ class Game:
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+<<<<<<< Updated upstream
                 if event.button == 1: 
                     if self.endbutton.is_clicked(mouse_pos) and (self.turnState == 3 or self.turnState == 5):
                         self.change_state()
@@ -83,6 +84,60 @@ class Game:
                                 state=0
                             )
                             card.click(mouse_pos, i)
+=======
+                if event.button ==1:
+                    match self.turn_State:
+                        case 1:
+                            # La carta ha sido seleccionada
+                            if Card.selected_card:
+                                # Se detecta que se intenta colocar en el campo
+                                if self.board.placeCard(mouse_Position, Card.selected_card, is_Opponent=False):  
+                                    if Card.selected_card in self.player_Hand:
+                                        self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
+                                    Card.selected_card = None
+                                    self.changeState(True)
+                                # Se reinicia la busqueda al darle a otra carta
+                                else:
+                                    for i in range(len(self.player_Hand)):
+                                        self.player_Hand[i].click(mouse_Position, i, 0)
+                            # Se espera a que se seleccione
+                            else:
+                                #Se crea una instancia para todas las cartas y asi decidir cual se utiliza
+                                for i in range(len(self.player_Hand)):
+                                    self.player_Hand[i].click(mouse_Position, i, 0)
+                                     
+                        case 2:
+                            if self.endbutton.isClicked(mouse_Position):
+                                self.changeState(True)
+                            else:
+                                for i in range(len(self.player_Field)):
+                                    #---
+                                    for j in range(len(self.board.cards_Board)):
+                                        if (self.player_Field[i].index == self.board.cards_Board[j].index):
+                                            fieldPosition = self.board.cards_Board[j].board_Position
+                                    #----Algoritmo de búsqueda para las cartas (TODO: Hacerlo función)
+                                            if (self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1)):
+                                                self.player_Field[i].changeBehavior()
+                                                self.board.cards_Board[j].behavior = self.player_Field[i].behavior
+                                                break
+                        case 3:
+                            TODO: cardBattle
+                            for j in range(len(self.board.cards_Board)):
+                                if (self.player_Field[i].index == self.board.cards_Board[j].index):
+                                    fieldPosition = self.board.cards_Board[j].board_Position
+                                    
+                            
+                            
+                            if self.endbutton.isClicked(mouse_Position):
+                                self.changeState(True)
+                        case 4:
+                            TODO: damageStep
+                        case 5:
+                            if self.endbutton.isClicked(mouse_Position):
+                                self.changeState(True)
+                    
+                    
+>>>>>>> Stashed changes
     
     def change_state(self):
         match self.turnState:
