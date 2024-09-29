@@ -47,7 +47,7 @@ class Game:
         self.turn_State= 0
 
         self.count = 0
-
+        self.first_turn = True
         #Correr
         self.running= True
 
@@ -129,17 +129,18 @@ class Game:
                                                 break
                         case 3:
                             found = False
-                            for i in range(len(self.player_Field)):
-                                    for j in range(len(self.board.cards_Board)):
-                                        if (self.player_Field[i].index==self.board.cards_Board[j].index):
-                                            fieldPosition= self.board.cards_Board[j].board_Position
-                                        if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
-                                            if len(self.opponent_Field) == 0 and self.player_Field[i].behavior==0:
-                                                self.combat.resolve(self.player_Field[i], None, self.lp, self.op_lp)
-                                                found = True
-                                                break
-                                    if found == True:
-                                        break
+                            if not self.first_turn:
+                                for i in range(len(self.player_Field)):
+                                        for j in range(len(self.board.cards_Board)):
+                                            if (self.player_Field[i].index==self.board.cards_Board[j].index):
+                                                fieldPosition= self.board.cards_Board[j].board_Position
+                                            if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
+                                                if len(self.opponent_Field) == 0 and self.player_Field[i].behavior==0:
+                                                    self.combat.resolve(self.player_Field[i], None, self.lp, self.op_lp)
+                                                    found = True
+                                                    break
+                                        if found == True:
+                                            break
                                             
 
 
@@ -147,9 +148,8 @@ class Game:
                                 self.changeState(True)
                                 self.returnState()
                         case 4:
-                            TODO: damageStep
-                        case 5:
                             if self.endbutton.isClicked(mouse_Position):
+                                self.first_turn = False
                                 self.changeState(True)
                     
     def returnState(self):
