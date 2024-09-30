@@ -3,6 +3,7 @@ from values import *
 
 class Board:
     card_on_board = 0
+    opponent_Card_On_Board= 0
 
     def __init__(self):
         self.rect_Width = field_Width // 5
@@ -11,6 +12,7 @@ class Board:
         self.occupied = [False] * 10
         self.board_Rect = [None] * 10
         self.cards_Board= []
+        self.opponent_Cards_Board= []
         
         # Crear los rectángulos del tablero
         for index in range(10):
@@ -51,6 +53,17 @@ class Board:
                         Board.card_on_board += 1
                         return True
             return False
+    
+    def opponentPlaceCard(self, selected_card):
+        for i, rect in enumerate(self.rectangles):
+            if not self.occupied[self.rectangles.index(rect)]:
+                if self.isSecondRow(self.rectangles.index(rect)):
+                    self.occupied[self.rectangles.index(rect)] = True
+                    selected_card.board_Position = self.rectangles.index(rect)  # Guarda la posición de la carta
+                    self.opponent_Cards_Board.append(selected_card)
+                    Board.opponent_Card_On_Board += 1
+                    return True
+        return False
                 
     def changeFieldCard(self, mouse_Position, selected_card, is_Opponent= False):
         if is_Opponent== False:

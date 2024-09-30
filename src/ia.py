@@ -1,54 +1,94 @@
-
 class AI:
-    def __init__(self, hand, field, opponent_field, lp):
-        self.hand = hand
-        self.field = field
-        self.opponent_field = opponent_field
-        self.lp = lp
 
-    def evaluate_hand(self):
-        print("Llegó a evaluate_hand")
-        # Evaluar las cartas en la mano para seleccionar la mejor jugada
-        best_card = None
-        best_score = 0
-        for card in self.hand:
-            score = self.evaluate_card(card)
-            if score > best_score:
-                best_card = card
-                best_score = score
-        return best_card
+    def __init__(self):
+        self.maxAtkScore= 0
+        self.maxDefScore= 0
+        self.maxAtkPosition= -1
+        self.maxDefPosition= -1
+        self.score=0
 
-    def evaluate_card(self, card):
-        print("Llegó a evaluate_card")
+
+    def evaluateCardPosition(self):
+        if(self.maxAtkScore>self.maxDefScore):
+            return self.maxAtkPosition
+        else:
+            return self.maxDefPosition
+
+    def evaluateCardColocation(self):
+        if(self.maxAtkScore>self.maxDefScore):
+            return 0
+        else:
+            return 1
+
+    def evaluateCardStats(self, card, position):
+        atk_Score= self.evaluateCardAttack(card.attack_Value)
+        print("Score de ataque de carta: ", atk_Score)
+        def_Score= self.evaluateCardDefense(card.defense_Value)
+        print("Score de defensa de la carta: ", def_Score)
+        if(atk_Score>def_Score):
+            if(atk_Score>self.maxAtkScore):
+                self.maxAtkScore= atk_Score
+                self.maxAtkPosition= position
+        else:
+            if(def_Score>self.maxDefScore):
+                self.maxDefScore= def_Score
+                self.maxDefPosition= position
+
+    def evaluateCardAttack(self, stat_Value):
         # Evaluar una carta basándose en el sistema de puntaje
-        score = 0
-        if card.attack_Value >= 7:
-            score += 7  # Ataque alto
-        elif card.attack_Value >= 5:
-            score += 5  # Ataque medio
-        elif card.attack_Value >= 3:
-            score += 3  # Ataque bajo
-        else:
-            score += 0  # Ataque mínimo
-        
-        if card.defense_Value >= 6:
-            score += 6  # Defensa alta
-        elif card.defense_Value >= 4:
-            score += 4  # Defensa media
-        elif card.defense_Value >= 2:
-            score += 2  # Defensa baja
-        else:
-            score += 1  # Defensa mínima
-
+        score= 0
+        match stat_Value:
+            case 0:
+                score= score+0
+            case 1:
+                score= score+2
+            case 2:
+                score= score+4
+            case 3:
+                score= score+6
+            case 4:
+                score= score+8
+            case 5:
+                score= score+10
+            case 6:
+                score= score+12
+            case 7:
+                score= score+14
+            case 8:
+                score= score+16
+            case 9:
+                score= score+18
+            case 10:
+                score= score+20
         return score
-
-    def make_move(self):
-        print("Llegó a make_move")
-        # Tomar una decisión de juego basándose en la evaluación del tablero
-        if not self.opponent_field:  # Si el oponente no tiene cartas en el campo
-            card_to_play = self.evaluate_hand()
-            if card_to_play:
-                self.play_card(card_to_play)
+    
+    def evaluateCardDefense(self, stat_Value):
+        # Evaluar una carta basándose en el sistema de puntaje
+        score= 0
+        match stat_Value:
+            case 0:
+                score= score+1
+            case 1:
+                score= score+2
+            case 2:
+                score= score+3
+            case 3:
+                score= score+5
+            case 4:
+                score= score+7
+            case 5:
+                score= score+9
+            case 6:
+                score= score+11
+            case 7:
+                score= score+13
+            case 8:
+                score= score+15
+            case 9:
+                score= score+17
+            case 10:
+                score= score+19
+        return score
 
     def play_card(self, card):
         print("Llegó a play_card")

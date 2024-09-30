@@ -3,6 +3,7 @@ from board import Board
 from values import *
 
 class OpponentCard:
+    selected_Card= None
     def __init__(self, index, attack_Value=0, defense_Value=0, state=0, behavior= 0):
         #self.image = pygame.transform.flip(card_Image, False, True) 
 
@@ -11,15 +12,19 @@ class OpponentCard:
         self.attack_Value = attack_Value
         self.defense_Value = defense_Value
         self.state= state
-        self.behavior= 0
+        self.behavior= behavior
         self.board_Position= None
         self.is_Selected = False
 
     #Dibujado de las cartas del oponente
-    def draw(self, screen, pos_X, pos_Y):
+    def draw(self, screen, pos_X, pos_Y, behavior):
         if pos_Y==2: #posY indica que se dibujara en el campo
             draw_Y= positionY[pos_Y]
-            screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            match behavior:
+                case 0:
+                    screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+                case 1:
+                    screen.blit(blue_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
             self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
         elif pos_Y==3: #posY indica que se dibujara en la mano
             draw_Y= positionY[pos_Y]-20 if self.is_Selected else positionY[pos_Y] #Ubicacion si es seleccionada o no
