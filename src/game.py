@@ -10,6 +10,7 @@ from combat import Combat
 from ia import AI
 from input import handle_input
 import random
+import time
 
 class Game:
     #Inicializacion
@@ -48,7 +49,6 @@ class Game:
         #                             4: Calculo de daño| 5: Fin de turno)
         self.turn_State= 0
 
-        self.count = 0
         self.first_turn = True
         #Correr
         self.running= True
@@ -165,23 +165,21 @@ class Game:
             self.pickup()
             self.active_Turn=1
         #Turno de la IA
-        if self.active_Turn==2:
-            ai = AI(self.opponent_Hand, self.opponent_Field, self.player_Field, self.op_Lp)
-            self.changeActivePlayer()
+            #self.changeActivePlayer()
 
         match self.turn_State:
             case 0:
                 self.pickup()
                 self.turn_State= 1
                 print("Cambio a fase de invocacion")
+                
             case 1:
                 if(isTrue==True):
-                    if self.count == 1:
-                        self.turn_State= 2
-                        self.count=0
-                        print("Cambio a fase de posicion")
-                        Card.selected_card=None
-                    self.count = self.count + 1
+                    self.turn_State= 2
+                    print("Cambio a fase de posicion")
+                if self.active_Turn == 2:
+                    ai.make_move()
+                    Card.selected_card=None
             case 2:
                 if(isTrue==True):
                         self.turn_State= 3
@@ -194,11 +192,12 @@ class Game:
                     else:
                         self.turn_State= 5
             case 4:
-                TODO: DamageStep
-                if(isTrue==True):
-                    self.turn_State= 4
-            case 5:
+                ai = AI(self.opponent_Hand, self.opponent_Field, self.player_Field, self.op_Lp)
                 self.changeActivePlayer()
+                if self.turn_State==1:
+                    print("Turno cambiado al del jugador")
+                elif self.turn_State==2:
+                    print("Turno cambiado al de la IA")
                 self.turn_State= 0
         
                 
@@ -270,6 +269,9 @@ class Game:
                         )
                         self.opponent_Hand.append(new_Hand_Card)
                         self.opponent_Deck[i].state= -1
+                self.active_Turn = self.active_Turn + 1
+                self.changeState(True)
+                return
     
     # Pasar de hand a board
     def moveCard(self, sender, receiver, card):

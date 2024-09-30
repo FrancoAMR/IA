@@ -54,6 +54,11 @@ lp_Image = pygame.transform.scale(lp_Image,(lp_Width,lp_Height))
 lp_X = 0
 lp_Y = window_Height - lp_Height
 
-#x & y positions for matrix
+# x & y positions for matrix
 positionX = [field_X,field_X+card_Width,field_X+card_Width*2,field_X+card_Width*3,field_X+card_Width*4]
 positionY = [card_Y, window_Height/2, window_Height/2-card_Height, 0]
+
+# Monster images
+monster_images_array = ["1"] 
+monster_image = pygame.image.load(f"assets/images/monster{monster_images_array[0]}.png")
+

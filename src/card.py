@@ -15,7 +15,7 @@ class Card:
         self.board_Position= None
         # Estado de seleccion inicializado en falso
         self.is_Selected = False
-        self.fieldCardClickFlag = False
+        self.isfieldCardClicked = False
         # Descripcion de la carta (IMG), probablemente se borre
         self.description = CardDescription()
 
@@ -68,8 +68,8 @@ class Card:
         # Verifica que el índice i sea válido
         if i < len(positionX):
             card_rect = pygame.Rect(positionX[i], positionY[pos_Y], card_Width, card_Height)
-            self.fieldCardClickFlag = card_rect.collidepoint(mouse_Position)
-            return self.fieldCardClickFlag
+            self.isfieldCardClicked = card_rect.collidepoint(mouse_Position)
+            return self.isfieldCardClicked
     def changeBehavior(self):
         Card.selected_card= self
         if(Card.selected_card.behavior==1):

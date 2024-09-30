@@ -1,3 +1,4 @@
+
 class AI:
     def __init__(self, hand, field, opponent_field, lp):
         self.hand = hand
@@ -6,6 +7,7 @@ class AI:
         self.lp = lp
 
     def evaluate_hand(self):
+        print("Llegó a evaluate_hand")
         # Evaluar las cartas en la mano para seleccionar la mejor jugada
         best_card = None
         best_score = 0
@@ -17,6 +19,7 @@ class AI:
         return best_card
 
     def evaluate_card(self, card):
+        print("Llegó a evaluate_card")
         # Evaluar una carta basándose en el sistema de puntaje
         score = 0
         if card.attack_Value >= 7:
@@ -40,6 +43,7 @@ class AI:
         return score
 
     def make_move(self):
+        print("Llegó a make_move")
         # Tomar una decisión de juego basándose en la evaluación del tablero
         if not self.opponent_field:  # Si el oponente no tiene cartas en el campo
             card_to_play = self.evaluate_hand()
@@ -47,6 +51,7 @@ class AI:
                 self.play_card(card_to_play)
 
     def play_card(self, card):
+        print("Llegó a play_card")
         # Lógica para jugar la carta seleccionada
         self.field.append(card)
         self.hand.remove(card)
