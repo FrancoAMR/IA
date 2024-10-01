@@ -146,6 +146,7 @@ class Game:
                                 if self.endbutton.isClicked(mouse_Position):
                                     self.returnState()
                                     self.changeState(True)
+                                    self.first_turn= False
                                     
                     elif self.active_Turn==2:
                         match self.turn_State:
@@ -278,6 +279,10 @@ class Game:
         receiver.append(card)
         sender.remove(card)
 
+    def removeCard(self, cardList, card):
+        cardList.remove(card)
+
+
     # Attack decision(?)
     def atkDecision(self):
         return True
@@ -318,9 +323,9 @@ class Game:
 
 
     #ai = AI(ai_hand, ai_field, player_field, ai_lp)
-    def ai_turn(self):
+    #def ai_turn(self):
         # Acciones que la IA toma en su turno
-        self.ai.make_move()
-        self.ai.attack()
+        #self.ai.make_move()
+        #self.ai.attack()
 
         

@@ -45,3 +45,6 @@ class Combat:
                     attacker_Card.state=1
                     print(f"¡Ambas cartas se han repelido!")
                     return 'ambas_repelidos'
+                
+    def removeCard(self, cardList, card):
+            cardList.remove(card)
