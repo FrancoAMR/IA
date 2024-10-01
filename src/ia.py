@@ -14,8 +14,8 @@ class AI:
         else:
             return self.maxDefPosition
 
-    def evaluateCardColocation(self):
-        if(self.maxAtkScore>self.maxDefScore):
+    def evaluateCardColocation(self, card):
+        if(card.attack_Value>card.defense_Value):
             return 0
         else:
             return 1
@@ -89,13 +89,6 @@ class AI:
             case 10:
                 score= score+19
         return score
-
-    def play_card(self, card):
-        print("Llegó a play_card")
-        # Lógica para jugar la carta seleccionada
-        self.field.append(card)
-        self.hand.remove(card)
-        print(f"IA juega la carta con ataque {card.attack_Value} y defensa {card.defense_Value}")
 
     def attack(self):
         # Lógica de ataque basada en el estado del tablero

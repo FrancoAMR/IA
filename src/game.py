@@ -49,8 +49,6 @@ class Game:
         #                             4: Calculo de daño| 5: Fin de turno)
         self.turn_State= 0
 
-        self.opPosition= -1
-
         self.first_turn = True
         #Correr
         self.running= True
@@ -154,14 +152,16 @@ class Game:
                             case 1:
                                 for i in range(len(self.opponent_Hand)):
                                     self.ia.evaluateCardStats(self.opponent_Hand[i], i)
-                                self.opPosition= self.ia.evaluateCardPosition()
-                                if self.board.opponentPlaceCard(self.opponent_Hand[self.opPosition]):
-                                    self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[self.opPosition])
-                                    self.changeState(True)
+                                newPosition= self.ia.evaluateCardPosition()
+                                if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
+                                    self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
+                                self.changeState(True)
                             case 2:
                                 for i in range(len(self.opponent_Field)):
-                                    self.opponent_Field[i].behavior= self.ia.evaluateCardColocation()
+                                    self.opponent_Field[i].behavior= self.ia.evaluateCardColocation(self.opponent_Field[i])
                                     self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
+                                self.changeState(True)
+                            case 3:
                                 self.changeState(True)
                                 
                     
