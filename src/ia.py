@@ -86,8 +86,6 @@ class AI:
                 score= score+15
             case 9:
                 score= score+17
-            case 10:
-                score= score+19
         return score
 
     def attack(self):

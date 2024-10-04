@@ -130,24 +130,45 @@ class Game:
                                                     self.board.cards_Board[j].behavior=self.player_Field[i].behavior
                                                     break
                             case 3:
-                                found = False
-                                if not self.first_turn:
-                                    for i in range(len(self.player_Field)):
-                                            for j in range(len(self.board.cards_Board)):
-                                                if (self.player_Field[i].index==self.board.cards_Board[j].index):
-                                                    fieldPosition= self.board.cards_Board[j].board_Position
-                                                if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
-                                                    if len(self.opponent_Field) == 0 and self.player_Field[i].behavior==0:
-                                                        self.combat.resolve(self.player_Field[i], None, self.lp, self.op_Lp)
-                                                        found = True
-                                                        break
-                                            if found == True:
-                                                break
                                 if self.endbutton.isClicked(mouse_Position):
                                     self.returnState()
                                     self.changeState(True)
+                                    Card.selected_card= None
                                     self.first_turn= False
-                                    
+                                else:
+                                    if Card.selected_card:
+                                        if Card.selected_card.behavior==0:
+                                            if len(self.opponent_Field) == 0:
+                                                self.combat.resolve(Card.selected_card, None, self.lp, self.op_Lp)
+                                                found = True
+                                            else:
+                                                found= False
+                                                for k in range(len(self.opponent_Field)):
+                                                    for l in range(len(self.board.opponent_Cards_Board)):
+                                                        if (self.opponent_Field[k].index==self.board.opponent_Cards_Board[l].index):
+                                                            attackedPosition= self.board.opponent_Cards_Board[l].board_Position
+                                                            if self.opponent_Field[k].fieldClick(mouse_Position, (attackedPosition-5), 2):
+                                                                self.combat.resolve(Card.selected_card, self.opponent_Field[k], self.lp, self.op_Lp)
+                                                                found= True
+                                                                break
+                                                    if(found==True):
+                                                        print("Sigue en el bucle k")
+                                                        break
+                                            Card.selected_card=None
+                                    else:
+                                        found=False
+                                        for i in range(len(self.player_Field)):
+                                            for j in range(len(self.board.cards_Board)):
+                                                if (self.player_Field[i].index==self.board.cards_Board[j].index):
+                                                    fieldPosition= self.board.cards_Board[j].board_Position
+                                        #---Algoritmo de búsqueda de carta (TODO: Hacerla función)
+                                                    if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
+                                                        self.player_Field[i].click(mouse_Position, fieldPosition, 1)
+                                                        found=True
+                                                        break
+                                            if(found==True):
+                                                break
+                                        
                     elif self.active_Turn==2:
                         match self.turn_State:
                             case 1:
@@ -165,7 +186,7 @@ class Game:
                             case 3:
                                 self.changeState(True)
                                 
-                    
+          
     def returnState(self):
         for i in range(len(self.player_Field)):
             self.player_Field[i].state=0

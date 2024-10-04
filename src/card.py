@@ -70,6 +70,7 @@ class Card:
             card_rect = pygame.Rect(positionX[i], positionY[pos_Y], card_Width, card_Height)
             self.isfieldCardClicked = card_rect.collidepoint(mouse_Position)
             return self.isfieldCardClicked
+        
     def changeBehavior(self):
         Card.selected_card= self
         if(Card.selected_card.behavior==1):

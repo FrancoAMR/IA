@@ -54,3 +54,11 @@ class OpponentCard:
         self.x = rect.x
         self.y = rect.y
         self.is_on_board = True  # Marcar como que está en el tablero
+
+
+    def fieldClick(self, mouse_Position, i, pos_Y):
+        # Verifica que el índice i sea válido
+        if i < len(positionX):
+            card_rect = pygame.Rect(positionX[i], positionY[pos_Y], card_Width, card_Height)
+            self.isfieldCardClicked = card_rect.collidepoint(mouse_Position)
+            return self.isfieldCardClicked
