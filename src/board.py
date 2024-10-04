@@ -91,7 +91,6 @@ class Board:
         if card.board_Position is not None:
             # Liberar la posición ocupada por la carta
             self.occupied[card.board_Position] = False
-            self.occupied_cards.remove(card)  # Remover la carta de las ocupadas
             Board.card_on_board -= 1
             print("Carta removida. Cartas en tablero:", Board.card_on_board)
             # Resetea la posición de la carta

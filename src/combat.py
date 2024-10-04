@@ -25,8 +25,6 @@ class Combat:
                     print(f"¡Carta atacante destruida! Se restan {self.damage} puntos de vida al atacante.")
                     return 2
                 else:
-                    lp_atacante.receiveDMG(attacker_Card.attack_Value)
-                    lp_atacado.receiveDMG(attacked_Card.attack_Value)
                     attacker_Card.state=1
                     print(f"¡Ambas cartas son destruidas! Ambos jugadores pierden {attacker_Card.attack_Value} puntos de vida.")
                     return 3

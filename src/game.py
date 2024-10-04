@@ -27,7 +27,7 @@ class Game:
         self.ia = AI()
         
         #Valores para las cartas y mazos de ambos jugadores
-        self.attack_Values = [0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
+        self.attack_Values = [0, 4, 6, 6, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
         self.defense_Values = [3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5, 3, 2, 4, 3, 4, 1, 3, 1, 4, 5]
         self.player_Deck= []
         self.opponent_Deck= []
@@ -50,6 +50,9 @@ class Game:
         self.turn_State= 0
 
         self.first_turn = True
+
+        self.temporaryIndex= -1
+        self.temporaryOpponentIndex= -1
         #Correr
         self.running= True
 
@@ -137,6 +140,7 @@ class Game:
                                     self.first_turn= False
                                 else:
                                     if Card.selected_card:
+                                        result= -1
                                         if Card.selected_card.behavior==0:
                                             if len(self.opponent_Field) == 0:
                                                 self.combat.resolve(Card.selected_card, None, self.lp, self.op_Lp)
@@ -148,11 +152,12 @@ class Game:
                                                         if (self.opponent_Field[k].index==self.board.opponent_Cards_Board[l].index):
                                                             attackedPosition= self.board.opponent_Cards_Board[l].board_Position
                                                             if self.opponent_Field[k].fieldClick(mouse_Position, (attackedPosition-5), 2):
-                                                                self.combat.resolve(Card.selected_card, self.opponent_Field[k], self.lp, self.op_Lp)
+                                                                result= self.combat.resolve(Card.selected_card, self.opponent_Field[k], self.lp, self.op_Lp)
+                                                                self.temporaryOpponentIndex=self.opponent_Field[k].index
+                                                                self.declareResult(result)
                                                                 found= True
                                                                 break
                                                     if(found==True):
-                                                        print("Sigue en el bucle k")
                                                         break
                                             Card.selected_card=None
                                     else:
@@ -164,6 +169,7 @@ class Game:
                                         #---Algoritmo de búsqueda de carta (TODO: Hacerla función)
                                                     if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
                                                         self.player_Field[i].click(mouse_Position, fieldPosition, 1)
+                                                        self.temporaryIndex= self.player_Field[i].index
                                                         found=True
                                                         break
                                             if(found==True):
@@ -185,8 +191,47 @@ class Game:
                                 self.changeState(True)
                             case 3:
                                 self.changeState(True)
-                                
-          
+
+
+
+    def declareResult(self, result):
+        match result:
+            case 1: #Destruccion del atacado
+                self.destroyAttackedCard()
+            case 2: #Destruccion del atacante
+                self.destroyAttackerCard()
+            case 3:
+                self.destroyAttackedCard()
+                self.destroyAttackerCard()
+        self.temporaryIndex=-1
+        self.temporaryOpponentIndex=-1
+
+    def destroyAttackedCard(self):
+        for i in range(len(self.board.opponent_Cards_Board)):
+            print("Valor de i: ", i)
+            if self.temporaryOpponentIndex== self.board.opponent_Cards_Board[i].index:
+                self.board.remove_card(self.board.opponent_Cards_Board[i])
+                self.board.opponent_Cards_Board.pop(i)
+                self.board.opponent_Card_On_Board= self.board.opponent_Card_On_Board-1
+                break
+        for j in range(len(self.opponent_Field)):
+            if self.temporaryOpponentIndex== self.opponent_Field[j].index:
+                self.opponent_Field.pop(j)
+                break
+
+    def destroyAttackerCard(self):
+        for i in range(len(self.board.cards_Board)):
+            print("Valor de i: ", i)
+            if self.temporaryIndex== self.board.cards_Board[i].index:
+                self.board.remove_card(self.board.cards_Board[i])
+                self.board.cards_Board.pop(i)
+                self.board.card_on_board= self.board.card_on_board-1
+                break
+        for j in range(len(self.player_Field)):
+            if self.temporaryIndex== self.player_Field[j].index:
+                self.player_Field.pop(j)
+                break
+
     def returnState(self):
         for i in range(len(self.player_Field)):
             self.player_Field[i].state=0
@@ -299,10 +344,6 @@ class Game:
         card.is_Selected= False
         receiver.append(card)
         sender.remove(card)
-
-    def removeCard(self, cardList, card):
-        cardList.remove(card)
-
 
     # Attack decision(?)
     def atkDecision(self):
