@@ -54,6 +54,13 @@ class Board:
                         return True
             return False
     
+    def targetCard(self, mouse_Position):
+        for i, rect in enumerate(self.rectangles):
+            if rect.collidepoint(mouse_Position) and self.occupied[self.rectangles.index(rect)]:
+                if self.isSecondRow(self.rectangles.index(rect)):
+                    return self.rectangles.index(rect)
+        return False
+
     def opponentPlaceCard(self, selected_card):
         for i, rect in enumerate(self.rectangles):
             if not self.occupied[self.rectangles.index(rect)]:
@@ -61,6 +68,7 @@ class Board:
                     self.occupied[self.rectangles.index(rect)] = True
                     selected_card.board_Position = self.rectangles.index(rect)  # Guarda la posición de la carta
                     self.opponent_Cards_Board.append(selected_card)
+                    print("Cantidad de cartas en el campo: ", len(self.opponent_Cards_Board))
                     Board.opponent_Card_On_Board += 1
                     return True
         return False
@@ -83,7 +91,6 @@ class Board:
         if card.board_Position is not None:
             # Liberar la posición ocupada por la carta
             self.occupied[card.board_Position] = False
-            self.occupied_cards.remove(card)  # Remover la carta de las ocupadas
             Board.card_on_board -= 1
             print("Carta removida. Cartas en tablero:", Board.card_on_board)
             # Resetea la posición de la carta
