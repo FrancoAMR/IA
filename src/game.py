@@ -9,6 +9,7 @@ from endbutton import Endbutton
 from combat import Combat
 from ia import AI
 from input import handle_input
+from menu import Menu
 import random
 import time
 
@@ -25,6 +26,7 @@ class Game:
         self.endbutton = Endbutton()
         self.combat = Combat()
         self.ia = AI()
+        self.menu = Menu()
         
         #Valores para las cartas y mazos de ambos jugadores
         self.attack_Values = [0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
@@ -52,6 +54,7 @@ class Game:
         self.opPosition= -1
 
         self.first_turn = True
+        self.difficulty = -1
         #Correr
         self.running= True
 
@@ -81,6 +84,13 @@ class Game:
 
     #Funcion para correr el juego
     def run(self):
+        while self.difficulty == -1:
+            events = pygame.event.get()
+            self.menu.render(self.screen)
+            self.menu.menu_events(events)
+            self.difficulty = self.menu.selected_difficulty
+            print("Dificultad seleccionda: ", self.difficulty)
+            pygame.display.flip()
         while self.running:
             events= pygame.event.get()
             self.events(events) #Manejo de eventos (clicks y movimientos)
