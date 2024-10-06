@@ -7,6 +7,12 @@ class AI:
         self.maxDefPosition= -1
         self.score=0
 
+    def restartScores(self):
+        self.maxAtkScore= 0
+        self.maxDefScore= 0
+        self.maxAtkPosition= -1
+        self.maxDefPosition= -1
+        self.score=0
 
     def evaluateCardPosition(self):
         if(self.maxAtkScore>self.maxDefScore):
@@ -22,9 +28,7 @@ class AI:
 
     def evaluateCardStats(self, card, position):
         atk_Score= self.evaluateCardAttack(card.attack_Value)
-        print("Score de ataque de carta: ", atk_Score)
         def_Score= self.evaluateCardDefense(card.defense_Value)
-        print("Score de defensa de la carta: ", def_Score)
         if(atk_Score>def_Score):
             if(atk_Score>self.maxAtkScore):
                 self.maxAtkScore= atk_Score

@@ -101,23 +101,29 @@ class Game:
                     if self.active_Turn==1:
                         match self.turn_State:
                             case 1:
-                                # La carta ha sido seleccionada
-                                if Card.selected_card:
-                                    # Se detecta que se intenta colocar en el campo
-                                    if self.board.placeCard(mouse_Position, Card.selected_card, is_Opponent=False):  
-                                        if Card.selected_card in self.player_Hand:
-                                            self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
-                                        Card.selected_card = None
-                                        self.changeState(True)
-                                    # Se reinicia la busqueda al darle a otra carta
+                                if self.endbutton.isClicked(mouse_Position):
+                                    self.returnState()
+                                    self.changeState(True)
+                                    Card.selected_card= None
+                                    self.first_turn= False
+                                else:
+                                    # La carta ha sido seleccionada
+                                    if Card.selected_card:
+                                        # Se detecta que se intenta colocar en el campo
+                                        if self.board.placeCard(mouse_Position, Card.selected_card, is_Opponent=False):  
+                                            if Card.selected_card in self.player_Hand:
+                                                self.moveCard(self.player_Hand, self.player_Field, Card.selected_card)
+                                            Card.selected_card = None
+                                            self.changeState(True)
+                                        # Se reinicia la busqueda al darle a otra carta
+                                        else:
+                                            for i in range(len(self.player_Hand)):
+                                                self.player_Hand[i].click(mouse_Position, i, 0)
+                                    # Se espera a que se seleccione
                                     else:
+                                        #Se crea una instancia para todas las cartas y asi decidir cual se utiliza
                                         for i in range(len(self.player_Hand)):
                                             self.player_Hand[i].click(mouse_Position, i, 0)
-                                # Se espera a que se seleccione
-                                else:
-                                    #Se crea una instancia para todas las cartas y asi decidir cual se utiliza
-                                    for i in range(len(self.player_Hand)):
-                                        self.player_Hand[i].click(mouse_Position, i, 0)
                             case 2:
                                 if self.endbutton.isClicked(mouse_Position):
                                     self.changeState(True)
@@ -173,26 +179,55 @@ class Game:
                                                         found=True
                                                         break
                                             if(found==True):
-                                                break
-                                        
+                                                break         
                     elif self.active_Turn==2:
-                        match self.turn_State:
+                        self.aiTurn()
+
+
+    #------------------------------Funcionamiento del jugador----------------------------------------
+
+
+
+    #------------------------------Fin del funcionamiento del jugador--------------------------------
+    
+    #------------------------------Funcionamiento de la IA-------------------------------------------
+    #Definicion del turno del oponente
+    def aiTurn(self):
+        if(len(self.opponent_Field)<5):
+            self.opponentInvocation()
+        self.changeState(True)
+        self.opponentColocation()
+        self.changeState(True)
+        self.opponentAttack()
+        self.changeState(True)
+        
+    def opponentInvocation(self):
+        self.ia.restartScores()
+        for i in range(len(self.opponent_Hand)):
+            self.ia.evaluateCardStats(self.opponent_Hand[i], i)
+        newPosition= self.ia.evaluateCardPosition()
+        if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
+            self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
+
+    def opponentColocation(self):
+        for i in range(len(self.opponent_Field)):
+            self.opponent_Field[i].behavior= self.ia.evaluateCardColocation(self.opponent_Field[i])
+            self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
+
+    def opponentAttack(self):
+        for i in range(len(self.opponent_Field)):
+            if(self.opponent_Field[i].behavior==0):
+                if (len(self.player_Field)==0):
+                    self.combat.resolve(self.opponent_Field[i], None, self.op_Lp, self.lp)
+                else:
+                    for j in range(len(self.player_Field)):
+                        match self.player_Field[j].behavior:
+                            case 0:
+                                TODO: compareATKDEF
                             case 1:
-                                for i in range(len(self.opponent_Hand)):
-                                    self.ia.evaluateCardStats(self.opponent_Hand[i], i)
-                                newPosition= self.ia.evaluateCardPosition()
-                                if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
-                                    self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
-                                self.changeState(True)
-                            case 2:
-                                for i in range(len(self.opponent_Field)):
-                                    self.opponent_Field[i].behavior= self.ia.evaluateCardColocation(self.opponent_Field[i])
-                                    self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
-                                self.changeState(True)
-                            case 3:
-                                self.changeState(True)
+                                TODO:compareATKs
 
-
+    #-------------------------------Fin del funcionamiento de la IA-----------------------------------
 
     def declareResult(self, result):
         match result:
@@ -381,13 +416,6 @@ class Game:
         for i in range(5):
             if pos_x== positionX[i]:
                 return i
-            
-
-
-    #ai = AI(ai_hand, ai_field, player_field, ai_lp)
-    #def ai_turn(self):
-        # Acciones que la IA toma en su turno
-        #self.ai.make_move()
-        #self.ai.attack()
+        
 
         
