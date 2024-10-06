@@ -199,6 +199,7 @@ class Game:
         self.opponentColocation()
         self.changeState(True)
         self.opponentAttack()
+        self.returnAIState()
         self.changeState(True)
         
     def opponentInvocation(self):
@@ -226,6 +227,10 @@ class Game:
                                 TODO: compareATKDEF
                             case 1:
                                 TODO:compareATKs
+    
+    def returnAIState(self):
+        for i in range(len(self.opponent_Field)):
+            self.opponent_Field[i].state=0
 
     #-------------------------------Fin del funcionamiento de la IA-----------------------------------
 
