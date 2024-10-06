@@ -201,7 +201,9 @@ class Game:
         self.changeState(True)
         self.opponentColocation()
         self.changeState(True)
-        self.opponentAttack()
+        temporalCardsOnField= len(self.opponent_Field)
+        for i in range(temporalCardsOnField):
+            self.opponentAttack()
         self.returnAIState()
         self.changeState(True)
         
@@ -243,6 +245,7 @@ class Game:
 
     
     def attackDecision(self):
+        attack_Succesful= False
         for i in range(len(self.opponent_Field)):
             if(self.opponent_Field[i].behavior==0):
                 if (len(self.player_Field)==0):
@@ -251,9 +254,27 @@ class Game:
                     for j in range(len(self.player_Field)):
                         match self.player_Field[j].behavior:
                             case 0:
-                                TODO: compareATKDEF
+                                match self.difficulty:
+                                    case 0:
+                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].attack_Value):
+                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                            self.temporaryIndex= self.player_Field[j].index
+                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                            self.declareResult(result)
+                                            attack_Succesful= True
+                                    case 1:
+                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].attack_Value):
+                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                            self.temporaryIndex= self.player_Field[j].index
+                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                            self.declareResult(result)
+                                            attack_Succesful= True
+                                    #case 2:
                             case 1:
-                                TODO:compareATKs
+                                TODO:compareATKDEF
+                        if(attack_Succesful==True):
+                            attack_Succesful=False
+                            break
 
     def returnAIState(self):
         for i in range(len(self.opponent_Field)):
@@ -264,18 +285,23 @@ class Game:
     def declareResult(self, result):
         match result:
             case 1: #Destruccion del atacado
-                self.destroyAttackedCard()
+                if(self.active_Turn==1):
+                    self.destroyOpponentCard()
+                elif(self.active_Turn==2):
+                    self.destroyPlayerCard()
             case 2: #Destruccion del atacante
-                self.destroyAttackerCard()
+                if(self.active_Turn==1):
+                    self.destroyPlayerCard()
+                elif(self.active_Turn==2):
+                    self.destroyOpponentCard
             case 3:
-                self.destroyAttackedCard()
-                self.destroyAttackerCard()
+                self.destroyOpponentCard()
+                self.destroyPlayerCard()
         self.temporaryIndex=-1
         self.temporaryOpponentIndex=-1
 
-    def destroyAttackedCard(self):
+    def destroyOpponentCard(self):
         for i in range(len(self.board.opponent_Cards_Board)):
-            print("Valor de i: ", i)
             if self.temporaryOpponentIndex== self.board.opponent_Cards_Board[i].index:
                 self.board.remove_card(self.board.opponent_Cards_Board[i])
                 self.board.opponent_Cards_Board.pop(i)
@@ -286,7 +312,7 @@ class Game:
                 self.opponent_Field.pop(j)
                 break
 
-    def destroyAttackerCard(self):
+    def destroyPlayerCard(self):
         for i in range(len(self.board.cards_Board)):
             print("Valor de i: ", i)
             if self.temporaryIndex== self.board.cards_Board[i].index:
