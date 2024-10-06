@@ -271,7 +271,22 @@ class Game:
                                             attack_Succesful= True
                                     #case 2:
                             case 1:
-                                TODO:compareATKDEF
+                                match self.difficulty:
+                                    case 0:
+                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].defense_Value):
+                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                            self.temporaryIndex= self.player_Field[j].index
+                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                            self.declareResult(result)
+                                            attack_Succesful= True
+                                    case 1:
+                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].defense_Value):
+                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                            self.temporaryIndex= self.player_Field[j].index
+                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                            self.declareResult(result)
+                                            attack_Succesful= True
+                                    #case 2:
                         if(attack_Succesful==True):
                             attack_Succesful=False
                             break
