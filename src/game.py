@@ -51,7 +51,7 @@ class Game:
         self.first_turn = True
 
         #Selector de dificultad (0: Facil| 1: Medio| 2: Dificil)
-        self.difficulty= 0
+        self.difficulty= 1
 
         #Indices para la busqueda al atacar
         self.temporaryIndex= -1
@@ -239,9 +239,9 @@ class Game:
             case 0:
                 self.attackDecisionEasy()
             case 1:
-                self.attackDecisionMedium()
+                self.determineAttacksMedium()
             case 2:
-                TODO: ComplexAttackDecision
+                TODO: attackDecisionHard()
 
     def attackDecisionEasy(self):
         attack_Succesful= False
@@ -266,30 +266,44 @@ class Game:
                                     result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
                                     self.declareResult(result)
                                     attack_Succesful= True
+                        if(attack_Succesful==True):
+                            attack_Succesful=False
+                            break
 
-    def attackDecisionMedium(self):
+    def determineAttacksMedium(self):
+        sorted_Opponent_Cards= sorted(self.opponent_Field, key=lambda card: card.attack_Value)
+        self.attackDecisionMedium(sorted_Opponent_Cards)
+
+    def attackDecisionMedium(self, sorted_Cards):
         attack_Succesful= False
-        for i in range(len(self.opponent_Field)):
-            if(self.opponent_Field[i].behavior==0):
+        for i in range(len(sorted_Cards)):
+            if(sorted_Cards[i].behavior==0):
                 if (len(self.player_Field)==0):
-                    self.combat.resolve(self.opponent_Field[i], None, self.op_Lp, self.lp)
+                    self.combat.resolve(sorted_Cards[i], None, self.op_Lp, self.lp)
                 else:
+                    temporary_Array_Index= -1
+                    maximumAttacked= -1
                     for j in range(len(self.player_Field)):
                         match self.player_Field[j].behavior:
                             case 0:
-                                if(self.opponent_Field[i].attack_Value>self.player_Field[j].attack_Value):
-                                    self.temporaryOpponentIndex= self.opponent_Field[i].index
-                                    self.temporaryIndex= self.player_Field[j].index
-                                    result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
-                                    self.declareResult(result)
-                                    attack_Succesful= True
+                                if(sorted_Cards[i].attack_Value>self.player_Field[j].attack_Value):
+                                    if(self.player_Field[j].attack_Value>maximumAttacked):
+                                        maximumAttacked= self.player_Field[j].attack_Value
+                                        temporary_Array_Index= j
                             case 1:
-                                if(self.opponent_Field[i].attack_Value>self.player_Field[j].defense_Value):
-                                    self.temporaryOpponentIndex= self.opponent_Field[i].index
-                                    self.temporaryIndex= self.player_Field[j].index
-                                    result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
-                                    self.declareResult(result)
-                                    attack_Succesful= True
+                                if(sorted_Cards[i].attack_Value>self.player_Field[j].defense_Value):
+                                    if(self.player_Field[j].defense_Value>maximumAttacked):
+                                        maximumAttacked= self.player_Field[j].defense_Value
+                                        temporary_Array_Index= j
+                    if(maximumAttacked!=-1):
+                        self.temporaryOpponentIndex= sorted_Cards[i].index
+                        self.temporaryIndex= self.player_Field[temporary_Array_Index].index
+                        result= self.combat.resolve(sorted_Cards[i], self.player_Field[temporary_Array_Index], self.op_Lp, self.lp)
+                        self.declareResult(result)
+                        attack_Succesful= True
+                    if(attack_Succesful):
+                        attack_Succesful= False
+                        break
 
     def returnAIState(self):
         for i in range(len(self.opponent_Field)):
