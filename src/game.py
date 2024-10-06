@@ -237,14 +237,13 @@ class Game:
     def opponentAttack(self):
         match self.difficulty:
             case 0:
-                self.attackDecision()
+                self.attackDecisionEasy()
             case 1:
-                self.attackDecision()
+                self.attackDecisionMedium()
             case 2:
                 TODO: ComplexAttackDecision
 
-    
-    def attackDecision(self):
+    def attackDecisionEasy(self):
         attack_Succesful= False
         for i in range(len(self.opponent_Field)):
             if(self.opponent_Field[i].behavior==0):
@@ -254,42 +253,43 @@ class Game:
                     for j in range(len(self.player_Field)):
                         match self.player_Field[j].behavior:
                             case 0:
-                                match self.difficulty:
-                                    case 0:
-                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].attack_Value):
-                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
-                                            self.temporaryIndex= self.player_Field[j].index
-                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
-                                            self.declareResult(result)
-                                            attack_Succesful= True
-                                    case 1:
-                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].attack_Value):
-                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
-                                            self.temporaryIndex= self.player_Field[j].index
-                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
-                                            self.declareResult(result)
-                                            attack_Succesful= True
-                                    #case 2:
+                                if(self.opponent_Field[i].attack_Value>self.player_Field[j].attack_Value):
+                                    self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                    self.temporaryIndex= self.player_Field[j].index
+                                    result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                    self.declareResult(result)
+                                    attack_Succesful= True
                             case 1:
-                                match self.difficulty:
-                                    case 0:
-                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].defense_Value):
-                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
-                                            self.temporaryIndex= self.player_Field[j].index
-                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
-                                            self.declareResult(result)
-                                            attack_Succesful= True
-                                    case 1:
-                                        if(self.opponent_Field[i].attack_Value>self.player_Field[j].defense_Value):
-                                            self.temporaryOpponentIndex= self.opponent_Field[i].index
-                                            self.temporaryIndex= self.player_Field[j].index
-                                            result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
-                                            self.declareResult(result)
-                                            attack_Succesful= True
-                                    #case 2:
-                        if(attack_Succesful==True):
-                            attack_Succesful=False
-                            break
+                                if(self.opponent_Field[i].attack_Value>self.player_Field[j].defense_Value):
+                                    self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                    self.temporaryIndex= self.player_Field[j].index
+                                    result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                    self.declareResult(result)
+                                    attack_Succesful= True
+
+    def attackDecisionMedium(self):
+        attack_Succesful= False
+        for i in range(len(self.opponent_Field)):
+            if(self.opponent_Field[i].behavior==0):
+                if (len(self.player_Field)==0):
+                    self.combat.resolve(self.opponent_Field[i], None, self.op_Lp, self.lp)
+                else:
+                    for j in range(len(self.player_Field)):
+                        match self.player_Field[j].behavior:
+                            case 0:
+                                if(self.opponent_Field[i].attack_Value>self.player_Field[j].attack_Value):
+                                    self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                    self.temporaryIndex= self.player_Field[j].index
+                                    result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                    self.declareResult(result)
+                                    attack_Succesful= True
+                            case 1:
+                                if(self.opponent_Field[i].attack_Value>self.player_Field[j].defense_Value):
+                                    self.temporaryOpponentIndex= self.opponent_Field[i].index
+                                    self.temporaryIndex= self.player_Field[j].index
+                                    result= self.combat.resolve(self.opponent_Field[i], self.player_Field[j], self.op_Lp, self.lp)
+                                    self.declareResult(result)
+                                    attack_Succesful= True
 
     def returnAIState(self):
         for i in range(len(self.opponent_Field)):
@@ -383,13 +383,9 @@ class Game:
     def changeActivePlayer(self):
         match self.active_Turn:
             case 1:
-                print("Cambiando de jugador a IA")
                 self.active_Turn= 2
-                print("Jugador activo: IA: ", self.active_Turn)
             case 2:
-                print("Cambiando de IA a jugador")
                 self.active_Turn= 1
-                print("Jugador activo: Jugador: ", self.active_Turn)
     
     # Robo del mazo a la mano
     def pickup(self):

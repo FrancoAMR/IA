@@ -21,7 +21,7 @@ class AI:
             return self.maxDefPosition
 
     def evaluateCardColocation(self, card):
-        if(card.attack_Value>card.defense_Value):
+        if(card.attack_Value>=card.defense_Value):
             return 0
         else:
             return 1
