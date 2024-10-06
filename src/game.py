@@ -48,9 +48,12 @@ class Game:
         #Manejo de estados del turno (0: Robo de cartas| 1: Invocacion| 2: Posicionamiento| 3: Ataque
         #                             4: Calculo de daño| 5: Fin de turno)
         self.turn_State= 0
-
         self.first_turn = True
 
+        #Selector de dificultad (0: Facil| 1: Medio| 2: Dificil)
+        self.difficulty= 0
+
+        #Indices para la busqueda al atacar
         self.temporaryIndex= -1
         self.temporaryOpponentIndex= -1
         #Correr
@@ -204,18 +207,42 @@ class Game:
         
     def opponentInvocation(self):
         self.ia.restartScores()
-        for i in range(len(self.opponent_Hand)):
-            self.ia.evaluateCardStats(self.opponent_Hand[i], i)
-        newPosition= self.ia.evaluateCardPosition()
-        if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
-            self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
+        match self.difficulty:
+            case 0:
+                newPosition= random.randint(0,(len(self.opponent_Hand)-1))
+                if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
+                    self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
+            case 1:
+                for i in range(len(self.opponent_Hand)):
+                    self.ia.evaluateCardStats(self.opponent_Hand[i], i)
+                newPosition= self.ia.evaluateCardPosition()
+                if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
+                    self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
+            case 2:
+                TODO: ComplexInvocation
 
     def opponentColocation(self):
-        for i in range(len(self.opponent_Field)):
-            self.opponent_Field[i].behavior= self.ia.evaluateCardColocation(self.opponent_Field[i])
-            self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
+        match self.difficulty:
+            case 0:
+                print("Cartas siempre en ataque en facil.")
+            case 1:
+                for i in range(len(self.opponent_Field)):
+                    self.opponent_Field[i].behavior= self.ia.evaluateCardColocation(self.opponent_Field[i])
+                    self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
+            case 2:
+                TODO: ComplexColocation
 
     def opponentAttack(self):
+        match self.difficulty:
+            case 0:
+                self.attackDecision()
+            case 1:
+                self.attackDecision()
+            case 2:
+                TODO: ComplexAttackDecision
+
+    
+    def attackDecision(self):
         for i in range(len(self.opponent_Field)):
             if(self.opponent_Field[i].behavior==0):
                 if (len(self.player_Field)==0):
@@ -227,7 +254,7 @@ class Game:
                                 TODO: compareATKDEF
                             case 1:
                                 TODO:compareATKs
-    
+
     def returnAIState(self):
         for i in range(len(self.opponent_Field)):
             self.opponent_Field[i].state=0
@@ -327,67 +354,46 @@ class Game:
     def pickup(self):
         match self.active_Turn:
             case 0: #Llenado de la mano del jugador y la IA
-                while len(self.player_Hand)<5:
-                    i= random.randint(0,len(self.player_Deck)-1)
-                    if(self.player_Deck[i].state== 0):
-                        new_Hand_Card= Card(
-                            index= i,
-                            attack_Value= self.attack_Values[i],
-                            defense_Value= self.defense_Values[i],
-                            state= 0,
-                            behavior=0
-                        )
-                        self.player_Hand.append(new_Hand_Card)
-                        self.player_Deck[i].state= -1
-                        
-                while len(self.opponent_Hand)<5:
-                    i= random.randint(0,len(self.player_Deck)-1)
-                    if(self.opponent_Deck[i].state== 0):
-                        new_Hand_Card= OpponentCard(
-                            index= i,
-                            attack_Value= self.attack_Values[i],
-                            defense_Value= self.defense_Values[i],
-                            state= 0,
-                            behavior= 0
-                        )
-                        self.opponent_Hand.append(new_Hand_Card)
-                        self.opponent_Deck[i].state= -1
+                self.opponentPickup()
+                self.playerPickup()
             case 1: # Llenado unicamente de la mano del jugador
-                while len(self.player_Hand)<5:
-                    i= random.randint(0,len(self.player_Deck)-1)
-                    if(self.player_Deck[i].state== 0):
-                        new_Hand_Card= Card(
-                            index= i,
-                            attack_Value= self.attack_Values[i],
-                            defense_Value= self.defense_Values[i],
-                            state= 0,
-                            behavior= 0
-                        )
-                        self.player_Hand.append(new_Hand_Card)
-                        self.player_Deck[i].state= -1
+                self.playerPickup()
             case 2: #Llenado unicamente de la mano de la IA
-                while len(self.opponent_Hand)<5:
-                    i= random.randint(0,len(self.player_Deck)-1)
-                    if(self.opponent_Deck[i].state== 0):
-                        new_Hand_Card= OpponentCard(
-                            index= i,
-                            attack_Value= self.attack_Values[i],
-                            defense_Value= self.defense_Values[i],
-                            state= 0,
-                            behavior= 0
-                        )
-                        self.opponent_Hand.append(new_Hand_Card)
-                        self.opponent_Deck[i].state= -1
+                self.opponentPickup()
     
-    # Pasar de hand a board
+    def playerPickup(self):
+        while len(self.player_Hand)<5:
+            i= random.randint(0,len(self.player_Deck)-1)
+            if(self.player_Deck[i].state== 0):
+                new_Hand_Card= Card(
+                    index= i,
+                    attack_Value= self.attack_Values[i],
+                    defense_Value= self.defense_Values[i],
+                    state= 0,
+                    behavior= 0
+                )
+                self.player_Hand.append(new_Hand_Card)
+                self.player_Deck[i].state= -1
+
+    def opponentPickup(self):
+        while len(self.opponent_Hand)<5:
+            i= random.randint(0,len(self.player_Deck)-1)
+            if(self.opponent_Deck[i].state== 0):
+                new_Hand_Card= OpponentCard(
+                    index= i,
+                    attack_Value= self.attack_Values[i],
+                    defense_Value= self.defense_Values[i],
+                    state= 0,
+                    behavior= 0
+                )
+                self.opponent_Hand.append(new_Hand_Card)
+                self.opponent_Deck[i].state= -1
+
+    # Pasar de la mano al campo
     def moveCard(self, sender, receiver, card):
         card.is_Selected= False
         receiver.append(card)
         sender.remove(card)
-
-    # Attack decision(?)
-    def atkDecision(self):
-        return True
     
     # Funcion de renderizado
     def render(self):
