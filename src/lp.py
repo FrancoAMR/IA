@@ -48,6 +48,6 @@ class Lp:
         #screen.blit(deck_text, (text_x, text_y+80))
     def loss(self):
         if self.lp == 0:
-            self.loss_Flag = False
-        else:
             self.loss_Flag = True
+        else:
+            self.loss_Flag = False

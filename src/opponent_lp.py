@@ -10,7 +10,8 @@ class OpponentLp:
 
         self.x = window_Width - self.width
         self.y = 0     
-        self.lp = 20   
+        self.lp = 20
+        self.win_Flag = False   
         #self.deck = 35
 
     def receiveDMG(self, damage): 
@@ -26,6 +27,7 @@ class OpponentLp:
         self.x = window_Width - self.width
         self.y = 0     
         self.lp = 20   
+        self.win_Flag = False  
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -41,3 +43,8 @@ class OpponentLp:
         text_y = self.y + 10
         screen.blit(lp_text, (text_x, text_y))
         #screen.blit(deck_text, (text_x, text_y+80))
+    def win(self):
+        if self.lp == 0:
+            self.win_Flag = True
+        else:
+            self.win_Flag = False

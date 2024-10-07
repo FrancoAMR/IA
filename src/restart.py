@@ -12,9 +12,22 @@ class Restart:
         self.button_rect_array = []
         self.selected_difficulty = -1
         
-    def render(self,screen):
+    def render(self,screen, win_or_lose):
         screen.fill(background_Color)
         screen.blit(background_Image, (0,0))
+        font = pygame.font.SysFont('/assets/fonts/font1.ttf',80)
+        if win_or_lose:
+            txt = "Ganaste"
+        else:
+            txt = "Perdiste"
+        title_text = font.render(txt, True, (255, 255, 255))
+        title_text_width = title_text.get_width()
+        title_text_x = (window_Width - title_text_width) / 2
+        title_text_y = 30
+        screen.blit(title_text, (title_text_x, title_text_y))
+
+        
+        
         screen.blit(restart_image, (self.difficult_x, self.difficult_y[0]))
         screen.blit(exit_image, (self.difficult_x, self.difficult_y[1]))
         for i in range(2):

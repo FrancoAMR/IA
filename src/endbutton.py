@@ -22,8 +22,8 @@ class Endbutton:
         font = pygame.font.SysFont(None,24)
         if active_turn == 1:
             if state == 1:
-                txt1 = "Saltar"
-                txt2 = "Turno"
+                txt1 = "Terminar"
+                txt2 = "Invocación"
             if state == 2:
                 txt1 = "Terminar"
                 txt2 = "Colocación"

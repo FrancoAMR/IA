@@ -64,6 +64,7 @@ class Game:
         self.initialize_flag = True
         self.running= True
         self.restart_Flag= False
+        self.win_flag = False
 
     # Llenado del mazo
     def fillCards(self, typeCard):
@@ -107,13 +108,25 @@ class Game:
                 self.events(events) #Manejo de eventos (clicks y movimientos)
                 self.render() #Dibuja los elementos en la pantalla
                 self.lp.loss()
-                self.running = self.lp.loss_Flag
+                self.op_Lp.win()
                 if self.turn_State in [0,1,2,3,4,5]:
                     self.changeState()
+
+                if self.lp.loss_Flag:
+                    print("Perdiste")
+                    self.running = False
+                if self.op_Lp.win_Flag:
+                    print("Ganaste")
+                    self.running = False
                 
+                #print("self.running: ", self.running)
+                #print("self.restart_Flag: ", self.restart_Flag)
             while not self.restart_Flag:
                 events= pygame.event.get()
-                self.restart.render(self.screen)
+                if not self.lp.loss_Flag:
+                    self.restart.render(self.screen, (not self.lp.loss_Flag))
+                elif not self.op_Lp.win_Flag:
+                    self.restart.render(self.screen, self.op_Lp.win_Flag)
                 self.restart.restart_events(events)
                 
                 self.restart_Flag = self.restart.select_restart
@@ -137,7 +150,7 @@ class Game:
         self.restart.select_restart = False
         self.restart_Flag = False
         
-        self.lp.loss_Flag = True
+        self.lp.loss_Flag = False
         self.menu.selected_difficulty = -1
         
         self.player_Deck = []
@@ -163,7 +176,7 @@ class Game:
         # Reiniciar indicadores de fin de juego
         self.running = True
         self.restart_Flag = False
-        self.lp.loss_Flag = True
+        self.lp.loss_Flag = False
         self.menu.selected_difficulty = -1
 
         
@@ -184,7 +197,7 @@ class Game:
                                     self.returnState()
                                     self.changeState(True)
                                     Card.selected_card= None
-                                    self.first_turn= False
+                                    
                                 else:
                                     # La carta ha sido seleccionada
                                     if Card.selected_card:
@@ -224,41 +237,44 @@ class Game:
                                     Card.selected_card= None
                                     self.first_turn= False
                                 else:
-                                    if Card.selected_card:
-                                        result= -1
-                                        if Card.selected_card.behavior==0:
-                                            if len(self.opponent_Field) == 0:
-                                                self.combat.resolve(Card.selected_card, None, self.lp, self.op_Lp)
-                                                found = True
-                                            else:
-                                                found= False
-                                                for k in range(len(self.opponent_Field)):
-                                                    for l in range(len(self.board.opponent_Cards_Board)):
-                                                        if (self.opponent_Field[k].index==self.board.opponent_Cards_Board[l].index):
-                                                            attackedPosition= self.board.opponent_Cards_Board[l].board_Position
-                                                            if self.opponent_Field[k].fieldClick(mouse_Position, (attackedPosition-5), 2):
-                                                                result= self.combat.resolve(Card.selected_card, self.opponent_Field[k], self.lp, self.op_Lp)
-                                                                self.temporaryOpponentIndex=self.opponent_Field[k].index
-                                                                self.declareResult(result)
-                                                                found= True
-                                                                break
-                                                    if(found==True):
-                                                        break
-                                            Card.selected_card=None
+                                    if not self.first_turn:
+                                        if Card.selected_card:
+                                            result= -1
+                                            if Card.selected_card.behavior==0:
+                                                if len(self.opponent_Field) == 0:
+                                                    self.combat.resolve(Card.selected_card, None, self.lp, self.op_Lp)
+                                                    found = True
+                                                else:
+                                                    found= False
+                                                    for k in range(len(self.opponent_Field)):
+                                                        for l in range(len(self.board.opponent_Cards_Board)):
+                                                            if (self.opponent_Field[k].index==self.board.opponent_Cards_Board[l].index):
+                                                                attackedPosition= self.board.opponent_Cards_Board[l].board_Position
+                                                                if self.opponent_Field[k].fieldClick(mouse_Position, (attackedPosition-5), 2):
+                                                                    result= self.combat.resolve(Card.selected_card, self.opponent_Field[k], self.lp, self.op_Lp)
+                                                                    self.temporaryOpponentIndex=self.opponent_Field[k].index
+                                                                    self.declareResult(result)
+                                                                    found= True
+                                                                    break
+                                                        if(found==True):
+                                                            break
+                                                Card.selected_card=None
+                                        else:
+                                            found=False
+                                            for i in range(len(self.player_Field)):
+                                                for j in range(len(self.board.cards_Board)):
+                                                    if (self.player_Field[i].index==self.board.cards_Board[j].index):
+                                                        fieldPosition= self.board.cards_Board[j].board_Position
+                                            #---Algoritmo de búsqueda de carta (TODO: Hacerla función)
+                                                        if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
+                                                            self.player_Field[i].click(mouse_Position, fieldPosition, 1)
+                                                            self.temporaryIndex= self.player_Field[i].index
+                                                            found=True
+                                                            break
+                                                if(found==True):
+                                                    break    
                                     else:
-                                        found=False
-                                        for i in range(len(self.player_Field)):
-                                            for j in range(len(self.board.cards_Board)):
-                                                if (self.player_Field[i].index==self.board.cards_Board[j].index):
-                                                    fieldPosition= self.board.cards_Board[j].board_Position
-                                        #---Algoritmo de búsqueda de carta (TODO: Hacerla función)
-                                                    if self.player_Field[i].fieldClick(mouse_Position, fieldPosition, 1):
-                                                        self.player_Field[i].click(mouse_Position, fieldPosition, 1)
-                                                        self.temporaryIndex= self.player_Field[i].index
-                                                        found=True
-                                                        break
-                                            if(found==True):
-                                                break         
+                                        self.changeState(True)     
                     elif self.active_Turn==2:
                         self.aiTurn()
 
