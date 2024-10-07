@@ -321,7 +321,7 @@ class Game:
                     self.ia.evaluateCardStatsHard(self.opponent_Hand[i], i, decision)
                 if(len(self.player_Field)>0):
                     powerfulPlayerCard= self.orderPlayerCards()
-                self.ia.comparePlayerCard(powerfulPlayerCard)
+                    self.ia.comparePlayerCard(powerfulPlayerCard)
                 newPosition= self.ia.evaluateCardPositionHard()
                 print("Tipo de position: ", type(newPosition))
                 if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
