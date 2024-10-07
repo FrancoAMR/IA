@@ -17,6 +17,15 @@ class OpponentLp:
         self.lp -= damage
         if self.lp < 0:
             self.lp = 0  # Los life points no pueden ser negativos
+    
+    def restart_op_lp(self):
+        self.image = lp_Image  # Puedes usar la misma imagen o una diferente si prefieres
+        self.width = lp_Width
+        self.height = lp_Height
+
+        self.x = window_Width - self.width
+        self.y = 0     
+        self.lp = 20   
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))

@@ -10,6 +10,7 @@ from combat import Combat
 from ia import AI
 from input import handle_input
 from menu import Menu
+from restart import Restart
 import random
 import time
 
@@ -17,7 +18,7 @@ class Game:
     #Inicializacion
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Window")
+        pygame.display.set_caption("Sombras")
         self.screen = pygame.display.set_mode((window_Width, window_Height))
         self.clock = pygame.time.Clock()
         self.lp= Lp()
@@ -27,6 +28,7 @@ class Game:
         self.combat = Combat()
         self.ia = AI()
         self.menu = Menu()
+        self.restart = Restart()
         
         #Valores para las cartas y mazos de ambos jugadores
         self.attack_Values = [0, 4, 6, 6, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5, 0, 4, 1, 3, 2, 1, 2, 6, 2, 5]
@@ -59,7 +61,9 @@ class Game:
         self.temporaryIndex= -1
         self.temporaryOpponentIndex= -1
         #Correr
+        self.initialize_flag = True
         self.running= True
+        self.restart_Flag= False
 
     # Llenado del mazo
     def fillCards(self, typeCard):
@@ -87,19 +91,84 @@ class Game:
 
     #Funcion para correr el juego
     def run(self):
-        while self.difficulty == -1:
-            events = pygame.event.get()
-            self.menu.render(self.screen)
-            self.menu.menu_events(events)
-            self.difficulty = self.menu.selected_difficulty
-            print("Dificultad seleccionda: ", self.difficulty)
-            pygame.display.flip()
-        while self.running:
-            events= pygame.event.get()
-            self.events(events) #Manejo de eventos (clicks y movimientos)
-            self.render() #Dibuja los elementos en la pantalla
-            if self.turn_State in [0,1,2,3,4,5]:
-                self.changeState()
+        while self.initialize_flag:
+            
+            while self.difficulty == -1:
+                events = pygame.event.get()
+                self.menu.render(self.screen)
+                self.menu.menu_events(events)
+                self.difficulty = self.menu.selected_difficulty
+                #print("Dificultad seleccionda: ", self.difficulty)
+                pygame.display.flip()
+                
+                
+            while self.running==True:
+                events= pygame.event.get()
+                self.events(events) #Manejo de eventos (clicks y movimientos)
+                self.render() #Dibuja los elementos en la pantalla
+                self.lp.loss()
+                self.running = self.lp.loss_Flag
+                if self.turn_State in [0,1,2,3,4,5]:
+                    self.changeState()
+                print("self.restart_Flag:", self.restart_Flag)
+                
+            while not self.restart_Flag:
+                print("self.restart_Flag:", self.restart_Flag)
+                events= pygame.event.get()
+                self.restart.render(self.screen)
+                self.restart.restart_events(events)
+                
+                self.restart_Flag = self.restart.select_restart
+                pygame.display.flip()
+                
+                
+            if(self.restart_Flag):
+                
+                self.reset_game()
+                self.board.restart_board()
+                self.lp.restart_lp()
+                self.op_Lp.restart_op_lp()
+            else:
+                self.initialize_flag = False
+
+    def reset_game(self):
+        
+        # Reiniciar el mazo y la mano de los jugadores
+        self.difficulty = -1
+        self.running= True
+        self.restart.select_restart = False
+        self.restart_Flag = False
+        
+        self.lp.loss_Flag = True
+        self.menu.selected_difficulty = -1
+        
+        self.player_Deck = []
+        self.opponent_Deck = []
+        self.fillCards(0)
+        self.fillCards(1)
+        
+        self.player_Hand = []
+        self.opponent_Hand = []
+        self.player_Field = []
+        self.opponent_Field = []
+        
+        # Reiniciar los turnos y estados
+        self.active_Turn = 0
+        self.turn_State = 0
+        self.first_turn = True
+        
+        # Reiniciar la dificultad y selección
+        self.difficulty = -1
+        self.temporaryIndex = -1
+        self.temporaryOpponentIndex = -1
+        
+        # Reiniciar indicadores de fin de juego
+        self.running = True
+        self.restart_Flag = False
+        self.lp.loss_Flag = True
+        self.menu.selected_difficulty = -1
+
+        
 
     #Funcion para el tratamiento de eventos
     def events(self, events):

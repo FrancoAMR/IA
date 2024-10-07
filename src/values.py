@@ -72,3 +72,9 @@ medium_image = pygame.transform.scale(medium_image,(difficulty_width,difficulty_
 hard_image = pygame.image.load("assets/images/hard.png")
 hard_image = pygame.transform.scale(hard_image,(difficulty_width,difficulty_height))
 
+# Restart buttons images
+
+restart_image = pygame.image.load("assets/images/restart.png")
+restart_image = pygame.transform.scale(restart_image,(difficulty_width,difficulty_height))
+exit_image = pygame.image.load("assets/images/exit.png")
+exit_image = pygame.transform.scale(exit_image,(difficulty_width,difficulty_height))

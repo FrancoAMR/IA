@@ -3,13 +3,11 @@ from values import *
 
 class Menu:
     def __init__(self):
-        self.state = True
         self.initial_difficult_y = window_Height/2 - 190
         self.difficult_x = (window_Width - difficulty_width)/2
         self.difficult_y = [self.initial_difficult_y+50, 
                             self.initial_difficult_y+50 + difficulty_height+40, 
                             self.initial_difficult_y+50 + difficulty_height*2+80] 
-        self.click_flag = False
         self.button_rect_array = []
         self.selected_difficulty = -1
 
@@ -52,6 +50,3 @@ class Menu:
                             elif i == 2:
                                 self.selected_difficulty = 2
                     
-    def set_difficulty(self):
-        
-        return self.selected_difficulty

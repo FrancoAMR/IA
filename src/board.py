@@ -32,6 +32,21 @@ class Board:
         if (rect_index>=5):
             return True
         return False
+    def restart_board(self):
+        self.rect_Width = field_Width // 5
+        self.rect_Height = field_Height // 2
+        self.rectangles = []
+        self.occupied = [False] * 10
+        self.board_Rect = [None] * 10
+        self.cards_Board= []
+        self.opponent_Cards_Board= []
+        for index in range(10):
+            col = index % 5  # Columna (0 a 4)
+            row = index // 5  # Fila (0 o 1)
+            rect_x = positionX[col]
+            rect_y = positionY[row + 1]  # Usar el segundo y tercer valor de positionY
+            self.rectangles.append(pygame.Rect(rect_x, rect_y, card_Width, card_Height))
+            self.board_Rect[index] = pygame.Rect(rect_x, rect_y, card_Width, card_Height)
 
     def draw(self, screen):
         screen.blit(field_Image, (field_X, field_Y))
