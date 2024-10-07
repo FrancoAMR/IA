@@ -119,10 +119,10 @@ class AI:
         elif(playerCard.defense_Value>self.maxAtkValue):
             self.maxAtkScore= self.maxAtkScore+1
             self.maxDefScore= self.maxDefScore+1
-        elif(playerCard.attack_Value<self.maxAtkValue):
-            self.maxAtkScore= self.maxAtkScore+6
-        elif(playerCard.defense_Value<self.maxAtkValue):
-            self.maxAtkScore= self.maxAtkScore+6
+        elif(playerCard.attack_Value<=self.maxAtkValue):
+            self.maxAtkScore= self.maxAtkScore+20
+        elif(playerCard.defense_Value<=self.maxAtkValue):
+            self.maxAtkScore= self.maxAtkScore+20
 
 
     def evaluateCardAttack(self, stat_Value):

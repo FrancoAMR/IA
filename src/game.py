@@ -530,6 +530,7 @@ class Game:
                 )
                 self.player_Hand.append(new_Hand_Card)
                 self.player_Deck[i].state= -1
+                self.lp.deck = self.lp.deck - 1
 
     def opponentPickup(self):
         while len(self.opponent_Hand)<5:
@@ -544,6 +545,7 @@ class Game:
                 )
                 self.opponent_Hand.append(new_Hand_Card)
                 self.opponent_Deck[i].state= -1
+                self.op_Lp.deck = self.op_Lp.deck -1
 
     # Pasar de la mano al campo
     def moveCard(self, sender, receiver, card):

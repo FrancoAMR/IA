@@ -12,7 +12,7 @@ class Lp:
         self.y = lp_Y
         self.lp = 20
         self.loss_Flag = True
-        #self.deck = 35
+        self.deck = 30
 
     def receiveDMG(self, damage): 
         self.lp -= damage
@@ -40,14 +40,14 @@ class Lp:
         font = pygame.font.SysFont(None, 80)
         
         lp_text = font.render(str(self.lp), True, stat_Color)
-        #deck_text = font.render(str(self.deck), True, stat_color)
+        deck_text = font.render(str(self.deck), True, stat_Color)
 
         text_x = self.x + 60
         text_y = self.y + 10
         screen.blit(lp_text, (text_x, text_y))
-        #screen.blit(deck_text, (text_x, text_y+80))
+        screen.blit(deck_text, (text_x, text_y+80))
     def loss(self):
-        if self.lp == 0:
+        if self.lp == 0 or self.deck ==0:
             self.loss_Flag = True
         else:
             self.loss_Flag = False
