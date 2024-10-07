@@ -70,7 +70,7 @@ monster_image = []
 for i in range(30):
     value_array = f"{i+1}"
     monster_images_array.append(value_array)
-    monster_image_surface = pygame.image.load(f"assets/images/monster{monster_images_array[i]}.png")
+    monster_image_surface = pygame.image.load(f"assets/images/monsters/monster{monster_images_array[i]}.png")
     monster_image.append(monster_image_surface)
 monster_image_width = 89
 monster_image_height = 118
