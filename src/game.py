@@ -323,8 +323,8 @@ class Game:
                     powerfulPlayerCard= self.orderPlayerCards()
                     self.ia.comparePlayerCard(powerfulPlayerCard)
                 newPosition= self.ia.evaluateCardPositionHard()
-                print("Tipo de position: ", type(newPosition))
                 if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
+                    self.opponent_Hand[newPosition].behavior= self.ia.evaluateCardColocationHard(self.opponent_Hand[newPosition])
                     self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
 
     def opponentColocation(self):
@@ -337,8 +337,6 @@ class Game:
                     self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
             case 2:
                 for i in range(len(self.opponent_Field)):
-                    self.opponent_Field[i].behavior= self.ia.evaluateCardColocationHard(self.opponent_Field[i])
-                    print("Posicion: ", self.opponent_Field[i].behavior)
                     self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
 
     def opponentAttack(self):
