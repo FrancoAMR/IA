@@ -281,6 +281,9 @@ class Game:
 
     #------------------------------Funcionamiento del jugador----------------------------------------
 
+    def orderPlayerCards(self):
+        sorted_Opponent_Cards= sorted(self.player_Field, key=lambda card: card.attack_Value, reverse= True)
+        return sorted_Opponent_Cards[0]
 
 
     #------------------------------Fin del funcionamiento del jugador--------------------------------
@@ -313,7 +316,16 @@ class Game:
                 if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
                     self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
             case 2:
-                TODO: ComplexInvocation
+                decision= self.ia.decideMove(self.op_Lp.lp, self.lp.lp, self.opponent_Field, self.player_Field)
+                for i in range(len(self.opponent_Hand)):
+                    self.ia.evaluateCardStatsHard(self.opponent_Hand[i], i, decision)
+                if(len(self.player_Field)>0):
+                    powerfulPlayerCard= self.orderPlayerCards()
+                self.ia.comparePlayerCard(powerfulPlayerCard)
+                newPosition= self.ia.evaluateCardPositionHard()
+                print("Tipo de position: ", type(newPosition))
+                if self.board.opponentPlaceCard(self.opponent_Hand[newPosition]):
+                    self.moveCard(self.opponent_Hand, self.opponent_Field, self.opponent_Hand[newPosition])
 
     def opponentColocation(self):
         match self.difficulty:
@@ -324,7 +336,10 @@ class Game:
                     self.opponent_Field[i].behavior= self.ia.evaluateCardColocation(self.opponent_Field[i])
                     self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
             case 2:
-                TODO: ComplexColocation
+                for i in range(len(self.opponent_Field)):
+                    self.opponent_Field[i].behavior= self.ia.evaluateCardColocationHard(self.opponent_Field[i])
+                    print("Posicion: ", self.opponent_Field[i].behavior)
+                    self.board.opponent_Cards_Board[i].behavior= self.opponent_Field[i].behavior
 
     def opponentAttack(self):
         match self.difficulty:
@@ -333,7 +348,7 @@ class Game:
             case 1:
                 self.determineAttacksMedium()
             case 2:
-                TODO: attackDecisionHard()
+                self.determineAttacksMedium()
 
     def attackDecisionEasy(self):
         attack_Succesful= False

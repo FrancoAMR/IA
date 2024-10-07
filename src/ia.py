@@ -3,15 +3,31 @@ class AI:
     def __init__(self):
         self.maxAtkScore= 0
         self.maxDefScore= 0
+        self.maxAtkValue= 0
+        self.maxDefValue= 0
         self.maxAtkPosition= -1
         self.maxDefPosition= -1
+        self.minAtkScore= 99
+        self.minDefScore= 99
+        self.minAtkValue= 99
+        self.minDefValue= 99
+        self.minAtkPosition= -1
+        self.minDefPosition= -1
         self.score=0
 
     def restartScores(self):
         self.maxAtkScore= 0
         self.maxDefScore= 0
+        self.maxAtkValue= 0
+        self.maxDefValue= 0
         self.maxAtkPosition= -1
         self.maxDefPosition= -1
+        self.minAtkScore= 99
+        self.minDefScore= 99
+        self.minAtkValue= 99
+        self.minDefValue= 99
+        self.minAtkPosition= -1
+        self.minDefPosition= -1
         self.score=0
 
     def evaluateCardPosition(self):
@@ -20,9 +36,33 @@ class AI:
         else:
             return self.maxDefPosition
 
+    def evaluateCardPositionHard(self):
+        if(self.maxDefScore>=self.maxAtkScore and self.maxAtkScore>=self.minDefScore):
+            return self.maxDefPosition
+        elif(self.maxDefScore>self.minDefScore and self.minDefScore>=self.maxAtkScore):
+            return self.maxDefPosition
+        elif(self.maxAtkScore>self.maxDefScore and self.maxDefScore>=self.minDefScore):
+            return self.maxAtkPosition
+        elif(self.maxAtkScore>self.minDefScore and self.minDefScore>=self.maxDefScore):
+            return self.maxAtkPosition
+        elif(self.minDefScore>=self.maxAtkScore and self.maxAtkScore>=self.maxDefScore):
+            return self.minDefPosition
+        elif(self.minDefScore>=self.maxDefScore and self.maxDefScore>=self.maxAtkScore):
+            return self.minDefPosition            
+
+
     def evaluateCardColocation(self, card):
         if(card.attack_Value>=card.defense_Value):
             return 0
+        else:
+            return 1
+        
+    def evaluateCardColocationHard(self, card):
+        if(card.attack_Value>=card.defense_Value):
+            if(card.defense_Value==self.minDefValue and card.attack_Value== self.minAtkValue):
+                return 1
+            else:
+                return 0
         else:
             return 1
 
@@ -37,6 +77,48 @@ class AI:
             if(def_Score>self.maxDefScore):
                 self.maxDefScore= def_Score
                 self.maxDefPosition= position
+
+    def evaluateCardStatsHard(self, card, position, decision):
+        atk_Score= self.evaluateCardAttack(card.attack_Value)
+        def_Score= self.evaluateCardDefense(card.defense_Value)
+        match decision:
+            case 0:
+                atk_Score= atk_Score+2
+            case 1:
+                def_Score= def_Score+2
+            case 2:
+                atk_Score= atk_Score
+                def_Score= def_Score
+        if(atk_Score>def_Score):
+            if(atk_Score>=self.maxAtkScore):
+                self.maxAtkScore= atk_Score
+                self.maxAtkPosition= position
+                self.maxAtkValue= card.attack_Value
+            elif(atk_Score<self.minAtkScore):
+                self.minAtkScore= atk_Score
+                self.minAtkPosition= position
+                self.minAtkValue= card.attack_Value
+        else:
+            if(def_Score>=self.maxDefScore):
+                self.maxDefScore= def_Score
+                self.maxDefPosition= position
+                self.maxDefValue= card.defense_Value
+            elif(def_Score<self.minDefScore):
+                self.minDefScore= def_Score
+                self.minDefPosition= position
+                self.minDefValue= card.defense_Value
+
+    def comparePlayerCard(self, playerCard):
+        if (playerCard.attack_Value>self.maxAtkValue):
+            self.minDefScore= self.minDefScore+10
+        elif(playerCard.defense_Value>self.maxAtkValue):
+            self.maxAtkScore= self.maxAtkScore+1
+            self.maxDefScore= self.maxDefScore+1
+        elif(playerCard.attack_Value<self.maxAtkValue):
+            self.maxAtkScore= self.maxAtkScore+10
+        elif(playerCard.defense_Value<self.maxAtkValue):
+            self.maxAtkScore= self.maxAtkScore+10
+
 
     def evaluateCardAttack(self, stat_Value):
         # Evaluar una carta basándose en el sistema de puntaje
@@ -96,30 +178,20 @@ class AI:
 # Busca la carta con menor puntaje del oponente, esta debe atacar a la carta del jugador con mayor puntaje
 # posible
 
-    def selectAttacker(self):
-        TODO: selectAttacker
-
-
-
-    def calculate_game_state(self, player_life, opponent_life, player_cards, opponent_cards):
+    def calculate_game_state(self, ia_LP, player_LP, ia_Field, player_Field):
         # Fórmula del estado del juego S
-        S = (player_life - opponent_life) + (len(player_cards) - len(opponent_cards))
-        for card in player_cards: #Ataque de la IA
+        S = (ia_LP - player_LP) + (len(ia_Field) - len(player_Field))
+        for card in ia_Field: #Ataque de la IA
             #Cambiar por valores de ataques
-            S += self.evaluateCardAttack(card.attack_Value)
-        for card in opponent_cards: #Defensa del jugador
+            S += card.attack_Value
+        for card in player_Field: #Defensa del jugador
             #Cambiar por valores de defensas
             #Agregar valores de ataques del jugador
-            S -= self.evaluateCardDefense(card.defense_Value)
+            if(card.behavior==0):
+                S -= card.attack_Value
+            if(card.behavior==1):
+                S -= card.defense_Value
         return S
-
-    def attack(self):
-        # Lógica de ataque basada en el estado del tablero
-        for card in self.field:
-            best_target = self.select_attack_target()
-            if best_target:
-                print(f"IA ataca la carta del oponente con ataque {best_target.attack_Value}")
-                # Lógica de ataque 
 
     def select_attack_target(self):
         # Elegir la mejor carta para atacar del oponente
@@ -130,37 +202,18 @@ class AI:
                 break
         return best_target
     
-    def make_move(self, player_life, opponent_life, player_cards, opponent_cards):
-            # Selecciona el movimiento basado en el nivel de dificultad
-            S = self.calculate_game_state(player_life, opponent_life, player_cards, opponent_cards)
-
-            if self.difficulty_level == "fácil":
-                self.random_move()
-            elif self.difficulty_level == "intermedio":
-                if S > 0:
-                    self.aggressive_move()
-                else:
-                    self.defensive_move()
-            elif self.difficulty_level == "difícil":
-                self.strategy_move(S)
-
-    def random_move(self):
-        # Implementa una lógica de movimiento aleatorio
-        print("IA realiza un movimiento aleatorio")
-
-    def aggressive_move(self):
-        # Implementa una lógica de movimiento agresivo
-        print("IA realiza un movimiento agresivo")
-
-    def defensive_move(self):
-        # Implementa una lógica de movimiento defensivo
-        print("IA realiza un movimiento defensivo")
+    def decideMove(self, ia_LP, player_LP, ia_Field, player_Field):
+        S = self.calculate_game_state(ia_LP, player_LP, ia_Field, player_Field)
+        decision=self.strategy_move(S)
+        return decision
 
     def strategy_move(self, S):
-        # Implementa una lógica de movimiento estratégica basada en el estado S
         if S > 10:  
-            print("IA realiza un ataque decisivo")
+            #Utilizar ataque +2
+            return 0
         elif S < -10:
-            print("IA se defiende fuertemente")
+            #Utilizar defensa +2
+            return 1
         else:
-            print("IA elige un movimiento equilibrado")
+            #Utilizar IA de medio mejorada
+            return 2
