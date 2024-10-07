@@ -5,16 +5,16 @@ class Menu:
     def __init__(self):
         self.state = True
         self.initial_difficult_y = window_Height/2 - 190
-        self.difficult_x = (window_Width - end_Button_Width)/2
+        self.difficult_x = (window_Width - difficulty_width)/2
         self.difficult_y = [self.initial_difficult_y+50, 
-                            self.initial_difficult_y+50 + end_Button_Height+40, 
-                            self.initial_difficult_y+50 + end_Button_Height*2+80] 
+                            self.initial_difficult_y+50 + difficulty_height+40, 
+                            self.initial_difficult_y+50 + difficulty_height*2+80] 
         self.click_flag = False
         self.button_rect_array = []
         self.selected_difficulty = -1
 
     def render(self, screen):
-        font = pygame.font.SysFont('../assets/fonts/font1.ttf',80)
+        font = pygame.font.SysFont('/assets/fonts/font1.ttf',80)
         self.button_rect_array = []
         screen.fill(background_Color)
 
@@ -23,11 +23,14 @@ class Menu:
         title_text_x = (window_Width - title_text_width) / 2
         title_text_y = 20
         screen.blit(title_text, (title_text_x, title_text_y))
-        
+
+        screen.blit(easy_image, (self.difficult_x, self.difficult_y[0]))
+        screen.blit(medium_image, (self.difficult_x, self.difficult_y[1]))
+        screen.blit(hard_image, (self.difficult_x, self.difficult_y[2]))
+
         for i in range(3):
-            screen.blit(end_Button_Image, (self.difficult_x, self.difficult_y[i]))
-            button_rect = pygame.Rect(self.difficult_x, self.difficult_y[i], end_Button_Width, end_Button_Height)
             
+            button_rect = pygame.Rect(self.difficult_x, self.difficult_y[i], difficulty_width, difficulty_height)
             self.button_rect_array.append(button_rect)
 
     def menu_events(self,events):

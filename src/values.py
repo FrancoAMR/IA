@@ -40,10 +40,10 @@ card_Desc_Y = field_Y
 # End Turn Button
 end_Button_Image = pygame.image.load("assets/images/endphase.png")
 mask = pygame.mask.from_surface(end_Button_Image)
-end_Button_Width = 100
-end_Button_Height = 100
+end_Button_Width = 150
+end_Button_Height = 150
 end_Button_Image = pygame.transform.scale(end_Button_Image,(end_Button_Width,end_Button_Height))
-end_Button_X = field_X + field_Width - end_Button_Width/2 + 100
+end_Button_X = field_X + field_Width - end_Button_Width/2 + 150
 end_Button_Y = field_Y + field_Height/2 - end_Button_Height/2
 
 # LP
@@ -61,4 +61,14 @@ positionY = [card_Y, window_Height/2, window_Height/2-card_Height, 0]
 # Monster images
 monster_images_array = ["1"] 
 monster_image = pygame.image.load(f"assets/images/monster{monster_images_array[0]}.png")
+
+# Difficult buttons images
+difficulty_width = 300
+difficulty_height = 100
+easy_image = pygame.image.load("assets/images/easy.png")
+easy_image = pygame.transform.scale(easy_image,(difficulty_width,difficulty_height))
+medium_image = pygame.image.load("assets/images/medium.png")
+medium_image = pygame.transform.scale(medium_image,(difficulty_width,difficulty_height))
+hard_image = pygame.image.load("assets/images/hard.png")
+hard_image = pygame.transform.scale(hard_image,(difficulty_width,difficulty_height))
 

@@ -53,7 +53,7 @@ class Game:
         self.first_turn = True
 
         #Selector de dificultad (0: Facil| 1: Medio| 2: Dificil)
-        self.difficulty= 1
+        self.difficulty= -1
 
         #Indices para la busqueda al atacar
         self.temporaryIndex= -1
@@ -461,7 +461,7 @@ class Game:
         mouse_pos = pygame.mouse.get_pos()
         self.board.draw(self.screen)
         self.board.mouse(self.screen, mouse_pos)
-        self.endbutton.draw(self.screen, self.turn_State)
+        self.endbutton.draw(self.screen, self.turn_State,self.active_Turn)
         self.lp.draw(self.screen)
         self.op_Lp.draw(self.screen)
         # Dibujado de las cartas de la mano
