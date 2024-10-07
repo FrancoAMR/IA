@@ -13,6 +13,7 @@ class AI:
         self.minDefValue= 99
         self.minAtkPosition= -1
         self.minDefPosition= -1
+        self.assignPosition= 0
         self.score=0
 
     def restartScores(self):
@@ -37,17 +38,23 @@ class AI:
             return self.maxDefPosition
 
     def evaluateCardPositionHard(self):
-        if(self.maxDefScore>=self.maxAtkScore and self.maxAtkScore>=self.minDefScore):
+        if(self.maxDefScore>self.maxAtkScore and self.maxAtkScore>=self.minDefScore):
+            self.assignPosition=1
             return self.maxDefPosition
         elif(self.maxDefScore>self.minDefScore and self.minDefScore>=self.maxAtkScore):
+            self.assignPosition=1
             return self.maxDefPosition
-        elif(self.maxAtkScore>self.maxDefScore and self.maxDefScore>=self.minDefScore):
+        elif(self.maxAtkScore>=self.maxDefScore and self.maxDefScore>=self.minDefScore):
+            self.assignPosition=0
             return self.maxAtkPosition
         elif(self.maxAtkScore>self.minDefScore and self.minDefScore>=self.maxDefScore):
+            self.assignPosition=0
             return self.maxAtkPosition
         elif(self.minDefScore>=self.maxAtkScore and self.maxAtkScore>=self.maxDefScore):
+            self.assignPosition=1
             return self.minDefPosition
         elif(self.minDefScore>=self.maxDefScore and self.maxDefScore>=self.maxAtkScore):
+            self.assignPosition=1
             return self.minDefPosition            
 
 
@@ -58,13 +65,11 @@ class AI:
             return 1
         
     def evaluateCardColocationHard(self, card):
-        if(card.attack_Value>=card.defense_Value):
-            if(card.defense_Value==self.minDefValue and card.attack_Value== self.minAtkValue):
-                return 1
-            else:
+        match self.assignPosition:
+            case 0:
                 return 0
-        else:
-            return 1
+            case 1:
+                return 1
 
     def evaluateCardStats(self, card, position):
         atk_Score= self.evaluateCardAttack(card.attack_Value)
@@ -83,7 +88,7 @@ class AI:
         def_Score= self.evaluateCardDefense(card.defense_Value)
         match decision:
             case 0:
-                atk_Score= atk_Score+2
+                atk_Score= atk_Score+5
             case 1:
                 def_Score= def_Score+2
             case 2:
