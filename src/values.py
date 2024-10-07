@@ -97,3 +97,7 @@ title_image = pygame.image.load("assets/images/title.png")
 title_image_width = 600
 title_image_height = 100
 title_image = pygame.transform.scale(title_image,(title_image_width,title_image_height))
+
+# Dark Card
+dark_card_image = pygame.image.load("assets/images/darkcard.png")
+dark_card_image = pygame.transform.scale(dark_card_image, (card_Width, card_Height))

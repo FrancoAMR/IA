@@ -29,7 +29,7 @@ class OpponentCard:
             self.drawMonster(screen, positionX[pos_X], draw_Y)
         elif pos_Y==3: #posY indica que se dibujara en la mano
             draw_Y= positionY[pos_Y]-20 if self.is_Selected else positionY[pos_Y] #Ubicacion si es seleccionada o no
-            screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
+            screen.blit(dark_card_image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
             #self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
             #self.drawMonster(screen, positionX[pos_X], draw_Y)
     def drawMonster(self, screen,pos_X, pos_Y):
