@@ -88,7 +88,7 @@ class AI:
         def_Score= self.evaluateCardDefense(card.defense_Value)
         match decision:
             case 0:
-                atk_Score= atk_Score+5
+                atk_Score= atk_Score+2
             case 1:
                 def_Score= def_Score+2
             case 2:
@@ -115,14 +115,14 @@ class AI:
 
     def comparePlayerCard(self, playerCard):
         if (playerCard.attack_Value>self.maxAtkValue):
-            self.minDefScore= self.minDefScore+10
+            self.minDefScore= self.minDefScore+6
         elif(playerCard.defense_Value>self.maxAtkValue):
             self.maxAtkScore= self.maxAtkScore+1
             self.maxDefScore= self.maxDefScore+1
         elif(playerCard.attack_Value<self.maxAtkValue):
-            self.maxAtkScore= self.maxAtkScore+10
+            self.maxAtkScore= self.maxAtkScore+6
         elif(playerCard.defense_Value<self.maxAtkValue):
-            self.maxAtkScore= self.maxAtkScore+10
+            self.maxAtkScore= self.maxAtkScore+6
 
 
     def evaluateCardAttack(self, stat_Value):
