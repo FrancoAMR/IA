@@ -7,9 +7,15 @@ window_Height = 720
 # Colors
 gray = (234, 234, 234)
 highlight_Color = (239, 160, 160, 165)
-background_Color = (96, 155, 99, 165)
+background_Color = (22, 91, 0, 165)
 stat_Color = (101, 101, 102)
 phase1_Color = (255, 233, 163)
+
+#Background
+background_Image = pygame.image.load("assets/images/bg.png")
+background_Image_Width = window_Width
+background_Image_Height = window_Height
+background_Image = pygame.transform.scale(background_Image, (background_Image_Width, background_Image_Height))
 
 # Field
 field_Image = pygame.image.load("assets/images/field.png")
@@ -59,9 +65,17 @@ positionX = [field_X,field_X+card_Width,field_X+card_Width*2,field_X+card_Width*
 positionY = [card_Y, window_Height/2, window_Height/2-card_Height, 0]
 
 # Monster images
-monster_images_array = ["1"] 
-monster_image = pygame.image.load(f"assets/images/monster{monster_images_array[0]}.png")
-
+monster_images_array = []
+monster_image = []
+for i in range(30):
+    value_array = f"{i+1}"
+    monster_images_array.append(value_array)
+    monster_image_surface = pygame.image.load(f"assets/images/monster{monster_images_array[i]}.png")
+    monster_image.append(monster_image_surface)
+monster_image_width = 89
+monster_image_height = 118
+for i in range(30):
+    monster_image[i] = pygame.transform.scale(monster_image[i],(monster_image_width,monster_image_height))
 # Difficult buttons images
 difficulty_width = 300
 difficulty_height = 100
@@ -78,3 +92,8 @@ restart_image = pygame.image.load("assets/images/restart.png")
 restart_image = pygame.transform.scale(restart_image,(difficulty_width,difficulty_height))
 exit_image = pygame.image.load("assets/images/exit.png")
 exit_image = pygame.transform.scale(exit_image,(difficulty_width,difficulty_height))
+
+title_image = pygame.image.load("assets/images/title.png")
+title_image_width = 600
+title_image_height = 100
+title_image = pygame.transform.scale(title_image,(title_image_width,title_image_height))

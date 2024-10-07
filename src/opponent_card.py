@@ -26,17 +26,29 @@ class OpponentCard:
                 case 1:
                     screen.blit(blue_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
             self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
+            self.drawMonster(screen, positionX[pos_X], draw_Y)
         elif pos_Y==3: #posY indica que se dibujara en la mano
             draw_Y= positionY[pos_Y]-20 if self.is_Selected else positionY[pos_Y] #Ubicacion si es seleccionada o no
             screen.blit(red_Card_Image, (positionX[pos_X], draw_Y)) #Dibujado en la pantalla
-            self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
+            #self.drawStats(screen, positionX[pos_X], draw_Y) #Llamada al dibujado de estadisticas
+            #self.drawMonster(screen, positionX[pos_X], draw_Y)
+    def drawMonster(self, screen,pos_X, pos_Y):
+        monster_x = (pos_X + (card_Width-monster_image_width)/2) + 1 
+        monster_y = pos_Y + 9
+        screen.blit(monster_image[self.index], (monster_x, monster_y))
 
     def drawStats(self, screen, pos_X, pos_Y):
         # Definicion de la fuente
         font= pygame.font.SysFont(None, 24)
         # Dibujado de los textos de estadisticas y su color
-        attack_text = font.render(str(self.attack_Value), True, (101, 101, 102))
-        defense_text = font.render(str(self.defense_Value), True, (101, 101, 102))
+        card_text_tuple = (0,0,0)
+        if self.behavior == 0:
+            card_text_tuple = (255,255,255)
+        else:
+            card_text_tuple = (stat_Color)
+
+        attack_text = font.render(str(self.attack_Value), True, (card_text_tuple))
+        defense_text = font.render(str(self.defense_Value), True, (card_text_tuple))
         attack_text_x = pos_X + 30
         attack_text_y = pos_Y + 142
         screen.blit(attack_text, (attack_text_x, attack_text_y))

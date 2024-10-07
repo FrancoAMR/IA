@@ -18,7 +18,7 @@ class Game:
     #Inicializacion
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Sombras")
+        pygame.display.set_caption("Sombras del duelo")
         self.screen = pygame.display.set_mode((window_Width, window_Height))
         self.clock = pygame.time.Clock()
         self.lp= Lp()
@@ -110,10 +110,8 @@ class Game:
                 self.running = self.lp.loss_Flag
                 if self.turn_State in [0,1,2,3,4,5]:
                     self.changeState()
-                print("self.restart_Flag:", self.restart_Flag)
                 
             while not self.restart_Flag:
-                print("self.restart_Flag:", self.restart_Flag)
                 events= pygame.event.get()
                 self.restart.render(self.screen)
                 self.restart.restart_events(events)
@@ -527,6 +525,7 @@ class Game:
     # Funcion de renderizado
     def render(self):
         self.screen.fill(background_Color)
+        self.screen.blit(background_Image, (0,0))
         mouse_pos = pygame.mouse.get_pos()
         self.board.draw(self.screen)
         self.board.mouse(self.screen, mouse_pos)

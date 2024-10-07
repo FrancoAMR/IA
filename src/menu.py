@@ -15,11 +15,13 @@ class Menu:
         font = pygame.font.SysFont('/assets/fonts/font1.ttf',80)
         self.button_rect_array = []
         screen.fill(background_Color)
+        screen.blit(background_Image, (0,0))
 
         title_text = font.render("Seleccione dificultad", True, (255, 255, 255))
         title_text_width = title_text.get_width()
         title_text_x = (window_Width - title_text_width) / 2
-        title_text_y = 20
+        title_text_y = 140
+        screen.blit(title_image,((window_Width-title_image_width)/2,10))
         screen.blit(title_text, (title_text_x, title_text_y))
 
         screen.blit(easy_image, (self.difficult_x, self.difficult_y[0]))

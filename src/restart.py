@@ -14,6 +14,7 @@ class Restart:
         
     def render(self,screen):
         screen.fill(background_Color)
+        screen.blit(background_Image, (0,0))
         screen.blit(restart_image, (self.difficult_x, self.difficult_y[0]))
         screen.blit(exit_image, (self.difficult_x, self.difficult_y[1]))
         for i in range(2):
